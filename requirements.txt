@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+supabase
+scikit-learn
+joblib
+PyJWT
+numpy
+opencv-python-headless
