@@ -1,5 +1,5 @@
 export const API_BASE_URL = (
-  import.meta.env.VITE_API_URL || "https://cybershield-ai-ym04.onrender.com"
+  import.meta.env.VITE_API_URL || "https://cybershield-ai-14wg.onrender.com"
 ).replace(/\/$/, "");
 
 async function parseResponse(response) {
