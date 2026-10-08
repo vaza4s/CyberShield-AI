@@ -1314,38 +1314,370 @@ function ScannerModal({ active, onClose }) {
   );
 }
 
-export default function App() {
-  const theme = useThemePreference();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeScanner, setActiveScanner] = useState(null);
-  const [stats, setStats] = useState(null);
-  const [apiDocsOpen, setApiDocsOpen] = useState(false);
-  const [complaintGuideOpen, setComplaintGuideOpen] = useState(false);
-  useReveal();
+function CyberBrandMark({ className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 56 56" aria-hidden="true">
+      <defs>
+        <linearGradient id="cs-brand-edge" x1="7" y1="4" x2="49" y2="52" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#45F6FF" />
+          <stop offset=".42" stopColor="#149CFF" />
+          <stop offset=".72" stopColor="#3D5BFF" />
+          <stop offset="1" stopColor="#7B43FF" />
+        </linearGradient>
+        <linearGradient id="cs-brand-bolt" x1="18" y1="17" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F7FFFF" />
+          <stop offset=".45" stopColor="#66E8FF" />
+          <stop offset="1" stopColor="#8A65FF" />
+        </linearGradient>
+      </defs>
+      <path d="M28 3 47 12l4 19-11 17-19 5L6 41 4 21 15 7 28 3Z" fill="#06142D" stroke="url(#cs-brand-edge)" strokeWidth="2.5" />
+      <path d="M38 19.5A14 14 0 1 0 38 36" stroke="url(#cs-brand-edge)" strokeWidth="4" strokeLinecap="round" />
+      <path d="M34.5 16.5 25 27l7 4-10.5 9.5" stroke="url(#cs-brand-bolt)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="42" cy="17" r="2.2" fill="#49F3FF" />
+      <circle cx="43" cy="38" r="2.2" fill="#7C5CFF" />
+      <circle cx="14" cy="42" r="2.2" fill="#1BA7FF" />
+    </svg>
+  );
+}
+
+function CyberCoreHero() {
+  return (
+    <div className="cs-core-wrap" aria-label="CyberShield active defense core">
+      <div className="cs-orbit cs-orbit-a"><i /><i /><i /></div>
+      <div className="cs-orbit cs-orbit-b"><i /><i /></div>
+      <div className="cs-core-aura" />
+      <svg className="cs-core-emblem" viewBox="0 0 244 274" aria-hidden="true">
+        <defs>
+          <linearGradient id="cs-core-edge" x1="24" y1="14" x2="218" y2="255" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#66F8FF" />
+            <stop offset=".35" stopColor="#16A8FF" />
+            <stop offset=".68" stopColor="#345CFF" />
+            <stop offset="1" stopColor="#7840FF" />
+          </linearGradient>
+          <linearGradient id="cs-core-inner" x1="59" y1="61" x2="191" y2="207" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#0AEFFF" />
+            <stop offset=".55" stopColor="#4FA6FF" />
+            <stop offset="1" stopColor="#9C67FF" />
+          </linearGradient>
+        </defs>
+        <path d="M122 7 214 47l15 91-52 88-90 35-71-63 3-99 64-71 39-21Z" fill="#06142D" stroke="url(#cs-core-edge)" strokeWidth="4" />
+        <path d="M122 35 188 64l11 67-38 64-65 25-51-46 2-72 47-51 28-16Z" fill="#072E73" fillOpacity=".58" stroke="url(#cs-core-inner)" strokeWidth="2.5" />
+        <path d="M157 87c-11-15-28-24-47-24-32 0-58 25-58 57s26 57 58 57c18 0 35-8 46-22" stroke="url(#cs-core-inner)" strokeWidth="12" strokeLinecap="round" />
+        <path d="m143 75-41 49 29 15-44 55" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="184" cy="75" r="5" fill="#45F6FF" />
+        <circle cx="194" cy="182" r="5" fill="#7A54FF" />
+        <circle cx="70" cy="220" r="5" fill="#19A7FF" />
+      </svg>
+      <span className="cs-core-node node-a" />
+      <span className="cs-core-node node-b" />
+      <span className="cs-core-node node-c" />
+    </div>
+  );
+}
+
+function useLiquidPointer(stageRef) {
+  const pointer = useRef({
+    tx: 760, ty: 360,
+    x: 760, y: 360,
+    x2: 740, y2: 360,
+    x3: 720, y3: 360,
+    active: 0
+  });
 
   useEffect(() => {
-    let active = true;
-    getPublicStats().then(data => { if (active) setStats(data); }).catch(() => {});
-    return () => { active = false; };
+    let frame = 0;
+    const tick = () => {
+      const node = stageRef.current;
+      const p = pointer.current;
+      if (node) {
+        p.x += (p.tx - p.x) * 0.16;
+        p.y += (p.ty - p.y) * 0.16;
+        p.x2 += (p.x - p.x2) * 0.09;
+        p.y2 += (p.y - p.y2) * 0.09;
+        p.x3 += (p.x2 - p.x3) * 0.065;
+        p.y3 += (p.y2 - p.y3) * 0.065;
+        node.style.setProperty("--mx", `${p.x}px`);
+        node.style.setProperty("--my", `${p.y}px`);
+        node.style.setProperty("--mx2", `${p.x2}px`);
+        node.style.setProperty("--my2", `${p.y2}px`);
+        node.style.setProperty("--mx3", `${p.x3}px`);
+        node.style.setProperty("--my3", `${p.y3}px`);
+        node.style.setProperty("--pointer-active", String(p.active));
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [stageRef]);
+
+  return {
+    onPointerMove: event => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      pointer.current.tx = x;
+      pointer.current.ty = y;
+      pointer.current.active = 1;
+      event.currentTarget.style.setProperty("--tilt-x", String((y / rect.height - 0.5) * -8));
+      event.currentTarget.style.setProperty("--tilt-y", String((x / rect.width - 0.5) * 10));
+    },
+    onPointerLeave: event => {
+      pointer.current.active = 0.32;
+      event.currentTarget.style.setProperty("--tilt-x", "0");
+      event.currentTarget.style.setProperty("--tilt-y", "0");
+    }
+  };
+}
+
+function LocalToolCard({ tool, onOpen }) {
+  const Icon = tool.icon;
+  return (
+    <button
+      className={`cs-tool-card cs-tool-${tool.id}`}
+      type="button"
+      onClick={() => onOpen(tool.id)}
+      aria-label={`Open ${tool.title}`}
+    >
+      <span className="cs-tool-glow" />
+      <span className="cs-tool-icon"><Icon /></span>
+      <span className="cs-tool-copy">
+        <strong>{tool.title}</strong>
+        <small>{tool.description}</small>
+      </span>
+      <span className="cs-tool-arrow"><ArrowIcon /></span>
+    </button>
+  );
+}
+
+function LocalInfoModal({ active, onClose }) {
+  if (!active) return null;
+  const isThreats = active === "threats";
+  return (
+    <div className="modal-backdrop" onMouseDown={onClose}>
+      <div className="scanner-modal cs-info-modal" onMouseDown={event => event.stopPropagation()}>
+        <div className="scanner-modal-head">
+          <div>
+            <span className={`tool-icon ${isThreats ? "tone-blue" : "tone-purple"}`}>
+              {isThreats ? <DatabaseIcon /> : <CapIcon />}
+            </span>
+            <div>
+              <small>CyberShield module</small>
+              <h2>{isThreats ? "Threat Intelligence" : "Cyber Awareness"}</h2>
+            </div>
+          </div>
+          <button className="icon-btn" type="button" onClick={onClose}><CloseIcon /></button>
+        </div>
+        <div className="scanner-content cs-info-content">
+          {isThreats ? (
+            <>
+              <p>Use the admin dashboard to inspect stored scan activity, detected threats and security events from the local CyberShield workflow.</p>
+              <PrimaryButton onClick={() => window.location.assign("/admin.html")}><GridIcon /> Open Threat Dashboard</PrimaryButton>
+            </>
+          ) : (
+            <>
+              <p>CyberShield explains why an input was flagged and surfaces safer next actions after each analysis. Use any scanner to see the explainable result panel.</p>
+              <div className="cs-awareness-list">
+                <span><ShieldIcon /> Verify suspicious links before opening them.</span>
+                <span><MailIcon /> Check unexpected email senders and requests.</span>
+                <span><LockIcon /> Treat unusual login activity as a security signal.</span>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LocalHeader({ engineOnline, onTool, onAdmin }) {
+  return (
+    <header className="cs-header">
+      <button className="cs-brand" type="button" onClick={() => onTool("url")}>
+        <CyberBrandMark className="cs-brand-mark" />
+        <span className="cs-brand-copy">
+          <strong>CyberShield <em>AI</em></strong>
+          <small>Detect&nbsp;&nbsp;•&nbsp;&nbsp;Prevent&nbsp;&nbsp;•&nbsp;&nbsp;Stay Safe</small>
+        </span>
+      </button>
+
+      <nav className="cs-nav" aria-label="CyberShield tools">
+        <button className="active" type="button"><GridIcon /> Home</button>
+        <button type="button" onClick={() => onTool("url")}><LinkIcon /> URL Scanner</button>
+        <button type="button" onClick={() => onTool("file")}><FileIcon /> File Scanner</button>
+        <button type="button" onClick={() => onTool("login")}><UserIcon /> Login Risk</button>
+        <button type="button" onClick={onAdmin}><DatabaseIcon /> History</button>
+      </nav>
+
+      <div className="cs-header-actions">
+        <span className={`cs-engine ${engineOnline ? "online" : "offline"}`}>
+          <i /> {engineOnline ? "Engine Online" : "Engine Offline"}
+        </span>
+        <button className="cs-profile" type="button" onClick={onAdmin} aria-label="Open admin dashboard"><UserIcon /></button>
+      </div>
+    </header>
+  );
+}
+
+function LocalSystemPanels({ stats, engineOnline, onAdmin }) {
+  const total = Number(stats?.total_scans || 0);
+  const safe = Number(stats?.safe_count || 0);
+  const malicious = Number(stats?.malicious_count || 0);
+  const review = Number(stats?.needs_review || 0);
+  const denominator = Math.max(total, safe + malicious + review, 1);
+  const safePct = Math.round((safe / denominator) * 100);
+  const maliciousPct = Math.round((malicious / denominator) * 100);
+  const reviewPct = Math.max(0, 100 - safePct - maliciousPct);
+
+  const ringStyle = {
+    "--safe": safePct,
+    "--review": reviewPct,
+    "--malicious": maliciousPct
+  };
+
+  return (
+    <section className="cs-panels" aria-label="System overview">
+      <article className="cs-panel cs-overview">
+        <div className="cs-panel-head"><strong><ZapIcon /> System Overview</strong><span>Local Mode</span></div>
+        <div className="cs-stat-grid">
+          <div><span className="blue"><LinkIcon /></span><b>{total}</b><small>URLs Scanned</small></div>
+          <div><span className="green"><ShieldIcon /></span><b>{safe}</b><small>Safe Results</small></div>
+          <div><span className="pink"><ShieldIcon /></span><b>{malicious}</b><small>Threats Detected</small></div>
+          <div><span className="purple"><SearchIcon /></span><b>{review}</b><small>Needs Review</small></div>
+        </div>
+      </article>
+
+      <article className="cs-panel cs-distribution">
+        <div className="cs-panel-head"><strong>Threat Distribution</strong></div>
+        <div className="cs-dist-body">
+          <div className="cs-risk-ring" style={ringStyle}><span><b>{total ? safePct : 0}%</b><small>Safe</small></span></div>
+          <div className="cs-risk-legend">
+            <span><i className="safe" /> Low Risk <b>{total ? safePct : 0}%</b></span>
+            <span><i className="review" /> Review <b>{total ? reviewPct : 0}%</b></span>
+            <span><i className="danger" /> High Risk <b>{total ? maliciousPct : 0}%</b></span>
+          </div>
+        </div>
+      </article>
+
+      <article className="cs-panel cs-status-panel">
+        <div className="cs-panel-head"><strong>System Status</strong><button type="button" onClick={onAdmin}>View History <ArrowIcon /></button></div>
+        <div className="cs-status-list">
+          <div><span className={engineOnline ? "ok" : "bad"}><ZapIcon /></span><p><b>FastAPI Engine</b><small>{engineOnline ? API_BASE_URL : "Start the local backend on port 8000"}</small></p><em>{engineOnline ? "Ready" : "Offline"}</em></div>
+          <div><span className="ok"><ShieldIcon /></span><p><b>ML Threat Model</b><small>URL classification + security rules</small></p><em>Loaded</em></div>
+          <div><span className="info"><DatabaseIcon /></span><p><b>Scan History</b><small>Open Admin for stored security events</small></p><em>Admin</em></div>
+        </div>
+      </article>
+    </section>
+  );
+}
+
+export default function App() {
+  const [activeScanner, setActiveScanner] = useState(null);
+  const [infoModal, setInfoModal] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [engineOnline, setEngineOnline] = useState(false);
+  const stageRef = useRef(null);
+  const liquidPointer = useLiquidPointer(stageRef);
+
+  useEffect(() => {
+    let mounted = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
+    fetch(`${API_BASE_URL}/`, { signal: controller.signal })
+      .then(response => {
+        if (mounted) setEngineOnline(response.ok);
+      })
+      .catch(() => {
+        if (mounted) setEngineOnline(false);
+      })
+      .finally(() => clearTimeout(timeout));
+
+    getPublicStats()
+      .then(data => { if (mounted) setStats(data); })
+      .catch(() => {});
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
+
+  function openTool(id) {
+    if (id === "threats" || id === "awareness") {
+      setInfoModal(id);
+      return;
+    }
+    setActiveScanner(id);
+  }
+
+  const heroTools = [
+    ["URL Analysis", LinkIcon, "url"],
+    ["File Scanning", FileIcon, "file"],
+    ["Login Risk", UserIcon, "login"],
+    ["Real-time Protection", ZapIcon, "threats"]
+  ];
 
   return (
     <>
-      <Navbar onOpenMenu={() => setMenuOpen(true)} onOpenAdmin={() => window.location.assign("/admin.html")} theme={theme} />
-      <main>
-        <Hero openScanner={setActiveScanner} />
-        <ToolsSection openScanner={setActiveScanner} />
-        <HowItWorks />
-        <ThreatIntelligence stats={stats} />
-        <Benefits />
-        <Testimonials />
-        <FinalCTA openScanner={setActiveScanner} />
-      </main>
-      <Footer onOpenApiDocs={() => setApiDocsOpen(true)} onOpenComplaintGuide={() => setComplaintGuideOpen(true)} />
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} onAdmin={() => window.location.assign("/admin.html")} theme={theme} />
+      <div
+        className="cs-app"
+        ref={stageRef}
+        onPointerMove={liquidPointer.onPointerMove}
+        onPointerLeave={liquidPointer.onPointerLeave}
+      >
+        <div className="cs-liquid-scene" aria-hidden="true">
+          <span className="cs-wave wave-one" />
+          <span className="cs-wave wave-two" />
+          <span className="cs-pointer-glow glow-one" />
+          <span className="cs-pointer-glow glow-two" />
+          <span className="cs-pointer-glow glow-three" />
+          <span className="cs-ripple ripple-one" />
+          <span className="cs-ripple ripple-two" />
+        </div>
+
+        <LocalHeader
+          engineOnline={engineOnline}
+          onTool={openTool}
+          onAdmin={() => window.location.assign("/admin.html")}
+        />
+
+        <main className="cs-main">
+          <section className="cs-hero">
+            <div className="cs-hero-copy">
+              <div className="cs-kicker"><ShieldIcon /> AI POWERED CYBER SECURITY</div>
+              <h1>Stay One Step <span>Ahead</span></h1>
+              <p>Scan suspicious URLs, analyze files, QR codes and emails, and detect risky login activity using your local CyberShield AI engine.</p>
+              <div className="cs-hero-actions">
+                <button className="cs-primary" type="button" onClick={() => openTool("url")}><SearchIcon /> Start Scanning <ArrowIcon /></button>
+                <button className="cs-secondary" type="button" onClick={() => window.location.assign("/admin.html")}><GridIcon /> View Dashboard</button>
+              </div>
+            </div>
+
+            <div className="cs-hero-visual">
+              <CyberCoreHero />
+              {heroTools.map(([label, Icon, id], index) => (
+                <button className={`cs-feature-node node-${index + 1}`} type="button" onClick={() => openTool(id)} key={label}>
+                  <span><Icon /></span><small>{label}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="cs-tools-grid" aria-label="CyberShield tools">
+            {tools.map(tool => <LocalToolCard key={tool.id} tool={tool} onOpen={openTool} />)}
+          </section>
+
+          <LocalSystemPanels
+            stats={stats}
+            engineOnline={engineOnline}
+            onAdmin={() => window.location.assign("/admin.html")}
+          />
+        </main>
+      </div>
+
       <ScannerModal active={activeScanner} onClose={() => setActiveScanner(null)} />
-      <ApiDocsModal open={apiDocsOpen} onClose={() => setApiDocsOpen(false)} />
-      <ComplaintGuideModal open={complaintGuideOpen} onClose={() => setComplaintGuideOpen(false)} />
+      <LocalInfoModal active={infoModal} onClose={() => setInfoModal(null)} />
     </>
   );
 }
