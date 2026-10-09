@@ -374,16 +374,91 @@ function FileDrop({ file, setFile, accept = undefined, icon: Icon = FileIcon, ti
 }
 
 function CompactResult({ result, error, loading }) {
-  if (loading) return <div className="cs-compact-result loading"><i /><strong>Analyzing security signals…</strong></div>;
-  if (error) return <div className="cs-compact-result high"><strong>Analysis failed</strong><span>{error}</span></div>;
+  if (loading) {
+    return (
+      <section className="cs-result-card loading">
+        <div className="cs-result-loader"><i /></div>
+        <div><strong>Analyzing security signals…</strong><span>Combining model output and security indicators.</span></div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="cs-result-card error">
+        <span className="cs-result-kicker">ANALYSIS ERROR</span>
+        <h3>Could not complete this scan</h3>
+        <p>{error}</p>
+      </section>
+    );
+  }
+
   const a = readAssessment(result);
   if (!a) return null;
+
   const tone = toneFrom(a.risk, a.score);
+  const hasScore = a.score != null && Number.isFinite(Number(a.score));
+  const score = hasScore ? clamp(Number(a.score), 0, 100) : 0;
+  const scoreLabel = hasScore ? String(Math.round(score)) : "—";
+  const circumference = 2 * Math.PI * 54;
+  const dash = hasScore ? circumference * (score / 100) : 0;
+  const remaining = circumference - dash;
+
+  const recommendation =
+    tone === "high"
+      ? "Do not trust, open, or continue with this item until it is independently verified."
+      : tone === "medium"
+        ? "Treat this item with caution. Verify the source and destination before continuing."
+        : "No major malicious signal was detected, but important actions should still be independently verified.";
+
   return (
-    <div className={`cs-compact-result ${tone}`}>
-      <div><strong>{a.label}</strong><span>{a.risk}{a.score != null ? ` • ${Math.round(a.score)}%` : ""}</span></div>
-      {a.reasons.length > 0 && <small>{a.reasons.slice(0, 2).join(" • ")}</small>}
-    </div>
+    <section className={`cs-result-card ${tone}`}>
+      <div className="cs-result-top">
+        <div>
+          <span className="cs-result-kicker">RISK ASSESSMENT</span>
+          <h3>{a.label}</h3>
+          <span className={`cs-result-status ${tone}`}>{a.risk}</span>
+        </div>
+
+        <div className="cs-risk-donut" aria-label={hasScore ? `Risk score ${Math.round(score)} percent` : "Risk score unavailable"}>
+          <svg viewBox="0 0 128 128" aria-hidden="true">
+            <circle className="donut-track" cx="64" cy="64" r="54" />
+            <circle
+              className="donut-value"
+              cx="64"
+              cy="64"
+              r="54"
+              pathLength={circumference}
+              strokeDasharray={`${dash} ${remaining}`}
+            />
+          </svg>
+          <div><strong>{scoreLabel}</strong><span>{hasScore ? "%" : ""}</span><small>RISK SCORE</small></div>
+        </div>
+      </div>
+
+      <div className="cs-result-separator" />
+
+      <div className="cs-result-section">
+        <h4>Why this was flagged</h4>
+        <div className="cs-result-reasons">
+          {(a.reasons.length
+            ? a.reasons
+            : [tone === "safe"
+                ? "No strong malicious indicator was returned by the current assessment."
+                : "The current assessment contains indicators that require further review."]
+          ).slice(0, 4).map((reason, index) => (
+            <div key={index}><i className={tone} /><span>{reason}</span></div>
+          ))}
+        </div>
+      </div>
+
+      <div className="cs-result-separator" />
+
+      <div className="cs-result-section recommendation">
+        <h4>Recommended action</h4>
+        <p>{recommendation}</p>
+      </div>
+    </section>
   );
 }
 
