@@ -217,7 +217,8 @@ function ResultPanel({ result, loading, error }) {
     );
   }
   const tone = riskTone(a.risk, a.score);
-  const score = Math.max(0, Math.min(100, a.score ?? (tone === "high" ? 84 : tone === "medium" ? 52 : 18)));
+  const hasScore = a.score != null;
+  const score = Math.max(0, Math.min(100, a.score ?? 0));
   return (
     <aside className={`csx-result tone-${tone}`}>
       <span className="csx-kicker">LATEST ASSESSMENT</span>
@@ -225,7 +226,7 @@ function ResultPanel({ result, loading, error }) {
       <span className={`csx-risk-pill ${tone}`}>{a.risk}</span>
       <div className="csx-score-wrap">
         <div className="csx-score-ring" style={{ "--score": `${score * 3.6}deg` }}>
-          <div><strong>{Math.round(score)}</strong><span>%</span><small>RISK SCORE</small></div>
+          <div><strong>{hasScore ? Math.round(score) : "—"}</strong><span>{hasScore ? "%" : ""}</span><small>RISK SCORE</small></div>
         </div>
       </div>
       <div className="csx-result-divider" />
