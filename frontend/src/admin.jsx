@@ -5,7 +5,15 @@ import { ArrowIcon, DatabaseIcon, FileIcon, LinkIcon, UserIcon } from "./icons";
 import "./styles.css";
 import "./admin.css";
 
-if ("serviceWorker" in navigator) {\n  navigator.serviceWorker.getRegistrations().then((registrations) => {\n    registrations.forEach((registration) => registration.unregister());\n  }).catch(() => {});\n}\n\nconst TOKEN_KEY = "cybershield_admin_token";
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations()
+    .then((registrations) => {
+      registrations.forEach((registration) => registration.unregister());
+    })
+    .catch(() => {});
+}
+
+const TOKEN_KEY = "cybershield_admin_token";
 const BRAND_ASSET = "/assets/cybershield-brand.svg";
 
 function Brand() {
