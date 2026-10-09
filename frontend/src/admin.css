@@ -161,3 +161,138 @@ body{overflow:auto!important}
   .csa-main{width:calc(100% - 28px);padding-top:24px}.csa-heading{align-items:flex-start;flex-direction:column;gap:12px}.csa-heading h1{font-size:30px}.csa-metrics{grid-template-columns:1fr}
   .csa-side{grid-template-columns:1fr}.csa-feed-row{grid-template-columns:40px 1fr}.csa-feed-row>span{grid-column:2;width:max-content}
 }
+
+
+/* =========================================================
+   CYBERSHIELD ADMIN TYPOGRAPHY V2
+   ========================================================= */
+:root{
+  --admin-display:"SF Pro Display","SF Pro Rounded","Inter","Segoe UI",sans-serif;
+  --admin-body:"SF Pro Text","Inter","Segoe UI",sans-serif;
+}
+
+.csa-dashboard,.csa-login,.csa-topbar,.csa-login-card{
+  font-family:var(--admin-body);
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+.csa-brand strong,
+.csa-login-card h1,
+.csa-heading h1,
+.csa-panel-title h2,
+.csa-architecture h2,
+.csa-scope h2,
+.csa-metric strong{
+  font-family:var(--admin-display);
+}
+
+.csa-brand strong{
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.csa-brand b{
+  font-size:19px;
+  font-weight:800;
+  background:linear-gradient(90deg,#55dcff,#7180ff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.csa-brand small{
+  font-size:10px;
+  font-weight:500;
+  color:#8295aa;
+}
+
+.csa-login-card h1{
+  font-size:34px;
+  font-weight:790;
+  line-height:1.1;
+  letter-spacing:-.05em;
+  margin-bottom:14px;
+}
+.csa-login-card>p{
+  font-size:13px;
+  line-height:1.62;
+  color:#9aaec2;
+}
+.csa-login-card label{
+  font-size:11px;
+  font-weight:650;
+}
+.csa-login-card input{
+  font-size:14px;
+}
+
+.csa-heading>div>span{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.045em;
+  text-transform:none;
+}
+.csa-heading h1{
+  font-size:38px;
+  font-weight:800;
+  letter-spacing:-.055em;
+}
+.csa-heading p{
+  font-size:13px;
+  line-height:1.5;
+  color:#9aadc1;
+}
+
+.csa-metric small{
+  font-size:11px;
+  font-weight:600;
+  color:#91a4ba;
+}
+.csa-metric strong{
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:-.05em;
+}
+.csa-metric>span{
+  font-size:10px;
+  font-weight:650;
+}
+
+.csa-panel-title>div>span{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:none;
+}
+.csa-panel-title h2{
+  font-size:23px;
+  font-weight:760;
+  letter-spacing:-.04em;
+}
+.csa-feed-row strong{
+  font-size:13px;
+  font-weight:650;
+}
+.csa-feed-row small{
+  font-size:10px;
+}
+.csa-architecture h2,
+.csa-scope h2{
+  font-weight:760;
+  letter-spacing:-.035em;
+}
+.csa-arch-row strong{
+  font-size:12px;
+  font-weight:650;
+}
+.csa-arch-row small,
+.csa-scope p{
+  font-size:10px;
+  line-height:1.5;
+}
+
+.csa-login-card h1,
+.csa-heading h1,
+.csa-panel-title h2{
+  text-shadow:0 1px 0 rgba(255,255,255,.025),0 0 26px rgba(60,140,255,.04);
+}
