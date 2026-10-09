@@ -9,1206 +9,264 @@ import {
   API_BASE_URL
 } from "./api";
 import {
-  ArrowIcon,
-  CapIcon,
-  CheckIcon,
-  ChevronLeft,
-  ChevronRight,
-  CloseIcon,
-  DatabaseIcon,
-  FileIcon,
-  GlobeIcon,
-  GridIcon,
   LinkIcon,
-  LockIcon,
-  MailIcon,
-  MenuIcon,
+  FileIcon,
   QrIcon,
-  SearchIcon,
-  ShieldIcon,
+  MailIcon,
   UserIcon,
-  ZapIcon
+  DatabaseIcon,
+  CapIcon,
+  GridIcon,
+  SearchIcon,
+  ArrowIcon,
+  ShieldIcon,
+  CheckIcon
 } from "./icons";
-import { ThemeControl, useThemePreference } from "./theme";
 
 const tools = [
-  {
-    id: "url",
-    title: "URL Analyzer",
-    description: "Check suspicious links for malware, phishing and harmful content.",
-    icon: LinkIcon,
-    tone: "gold"
-  },
-  {
-    id: "file",
-    title: "File Analyzer",
-    description: "Scan files for malware indicators, suspicious signatures and hidden threats.",
-    icon: FileIcon,
-    tone: "green"
-  },
-  {
-    id: "qr",
-    title: "QR Analyzer",
-    description: "Inspect QR codes before opening the destination they point to.",
-    icon: QrIcon,
-    tone: "purple"
-  },
-  {
-    id: "email",
-    title: "Email Analyzer",
-    description: "Review suspicious email text for phishing, scams and social-engineering signals.",
-    icon: MailIcon,
-    tone: "rose"
-  },
-  {
-    id: "login",
-    title: "Login Risk",
-    description: "Check unusual login activity using transparent security risk signals.",
-    icon: UserIcon,
-    tone: "orange"
-  },
-  {
-    id: "threats",
-    title: "Threat Intelligence",
-    description: "Explore threat activity, attack patterns and the latest system insights.",
-    icon: DatabaseIcon,
-    tone: "blue"
-  },
-  {
-    id: "awareness",
-    title: "Cyber Awareness",
-    description: "Learn safer habits and understand why common cyber threats work.",
-    icon: CapIcon,
-    tone: "purple"
-  }
+  { id: "url", title: "URL Analyzer", short: "URL", icon: LinkIcon, description: "Check suspicious links before you trust them.", tone: "cyan" },
+  { id: "file", title: "File Analyzer", short: "File", icon: FileIcon, description: "Inspect files using static security analysis.", tone: "blue" },
+  { id: "qr", title: "QR Analyzer", short: "QR", icon: QrIcon, description: "Decode and review QR destinations safely.", tone: "indigo" },
+  { id: "email", title: "Email Analyzer", short: "Email", icon: MailIcon, description: "Review suspicious email content for phishing signals.", tone: "rose" },
+  { id: "login", title: "Login Risk", short: "Login", icon: UserIcon, description: "Evaluate unusual sign-in activity and access risk.", tone: "orange" },
+  { id: "threats", title: "Threat Intelligence", short: "Intel", icon: DatabaseIcon, description: "Review the signals CyberShield uses during assessment.", tone: "teal" },
+  { id: "awareness", title: "Cyber Awareness", short: "Learn", icon: CapIcon, description: "Practical security habits for everyday use.", tone: "violet" }
 ];
 
-const steps = [
-  {
-    title: "Scan Anything",
-    description: "Enter a URL, upload a file or describe a login event.",
-    icon: LinkIcon
-  },
-  {
-    title: "AI Analysis",
-    description: "CyberShield checks the input using ML and transparent security rules.",
-    icon: SearchIcon
-  },
-  {
-    title: "Get Instant Results",
-    description: "Receive a clear risk result with indicators you can understand.",
-    icon: ShieldIcon
-  },
-  {
-    title: "Stay Safer",
-    description: "Use the result as a decision-support signal before taking action.",
-    icon: CheckIcon
-  }
-];
-
-const benefits = [
-  {
-    title: "AI-Powered Detection",
-    description: "Hybrid URL analysis combines a trained ML model with practical security heuristics.",
-    icon: ShieldIcon,
-    href: "https://www.cert-in.org.in/s2cMainServlet?VLCODE=CIAD-2026-0020&pageid=PUBVLNOTES02",
-    source: "CERT-In • AI Cyber Risks"
-  },
-  {
-    title: "Real-Time Intelligence",
-    description: "A unified dashboard turns scan activity into understandable security insights.",
-    icon: GlobeIcon,
-    href: "https://www.cert-in.org.in/s2cMainServlet?pageid=PUBADVLIST",
-    source: "CERT-In • Security Advisories"
-  },
-  {
-    title: "Privacy First",
-    description: "The login risk tool analyzes contextual signals and does not collect user passwords.",
-    icon: LockIcon,
-    href: "https://www.cert-in.org.in/AwarenessBooklets.jsp",
-    source: "CERT-In • Awareness Booklets"
-  },
-  {
-    title: "Easy for Everyone",
-    description: "A clean interface gives students, professionals and teams a simple workflow.",
-    icon: UserIcon,
-    href: "https://cybercrime.gov.in/Webform/CyberAware.aspx",
-    source: "I4C • Cyber Awareness"
-  }
-];
-
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "University Student",
-    quote: "CyberShield AI has helped me avoid suspicious links. I like that the result is clear instead of just showing a scary warning.",
-    initials: "SC"
-  },
-  {
-    name: "Marcus Taylor",
-    role: "IT Security Manager",
-    quote: "The interface makes security checks quick enough to become part of a normal workflow. The separation between URL, file and login risk is very useful.",
-    initials: "MT"
-  },
-  {
-    name: "Priya Desai",
-    role: "Freelance Designer",
-    quote: "I like how simple the experience is. The dashboard explains what the system found instead of expecting users to understand raw technical output.",
-    initials: "PD"
-  }
-];
-
-const navItems = [
-  ["Home", "home"],
-  ["URL Scanner", "tools"],
-  ["File Scanner", "tools"],
-  ["QR Analyzer", "tools"],
-  ["Email Analyzer", "tools"],
-  ["Login Risk", "tools"],
-  ["Threat Intelligence", "threat-intelligence"],
-  ["Cyber Awareness", "benefits"]
-];
-
-function scrollToId(id) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function useReveal() {
-  useEffect(() => {
-    const elements = [...document.querySelectorAll("[data-reveal]")];
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.14 }
-    );
-    elements.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
-function formatHumanLabel(value, fallback = "Not available") {
-  if (value == null || value === "") return fallback;
-  return String(value)
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, letter => letter.toUpperCase());
-}
-
-function toPercent(value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return null;
-  const percent = number <= 1 ? number * 100 : number;
-  return Math.max(0, Math.min(100, percent));
-}
-
-function normalizeTextItems(value) {
-  if (!value) return [];
-  if (Array.isArray(value)) {
-    return value
-      .map(item => {
-        if (typeof item === "string") return item;
-        if (!item || typeof item !== "object") return String(item || "");
-        return item.title || item.reason || item.message || item.description || "";
-      })
-      .filter(Boolean);
-  }
-  if (typeof value === "object") {
-    return Object.entries(value)
-      .map(([key, item]) => {
-        if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
-          return `${formatHumanLabel(key)}: ${item}`;
-        }
-        if (item && typeof item === "object") {
-          return item.title || item.reason || item.message || item.description || "";
-        }
-        return "";
-      })
-      .filter(Boolean);
-  }
-  return [String(value)];
-}
-
-function normalizeActions(value) {
-  if (!Array.isArray(value)) return [];
-  return value
-    .map(item => {
-      if (typeof item === "string") return { title: item, priority: "medium" };
-      if (!item || typeof item !== "object") return null;
-      const title = item.title || item.action || item.message || item.description;
-      if (!title) return null;
-      return { title, priority: String(item.priority || "medium").toLowerCase() };
-    })
-    .filter(Boolean);
-}
-
-function normalizeResult(data) {
-  if (!data || typeof data !== "object") return null;
-
-  const scoreCandidates = [
-    data.risk_score,
-    data.final_risk_score,
-    data.risk,
-    data.score,
-    data.malicious_probability,
-    data.probability,
-    data.confidence
-  ];
-  const rawScore = scoreCandidates.find(value => Number.isFinite(Number(value)));
-  const score = rawScore == null ? null : toPercent(rawScore);
-  const confidence = data.confidence == null ? null : toPercent(data.confidence);
-
-  const prediction =
-    data.prediction ||
-    data.classification ||
-    data.status ||
-    data.label ||
-    (data.risk_level ? `${data.risk_level} risk` : "Analysis complete");
-
-  const riskLevel = String(data.risk_level || "").toUpperCase();
-  const reasons = normalizeTextItems(
-    data.reasons ||
-      data.indicators ||
-      data.flags ||
-      data.security_indicators ||
-      data.details
-  );
-
-  const explainability = data.explainability && typeof data.explainability === "object"
-    ? {
-        available: data.explainability.available !== false,
-        title: data.explainability.title || "Why CyberShield reached this result",
-        items: normalizeTextItems(data.explainability.items)
-      }
-    : null;
-
-  return {
-    score,
-    confidence,
-    prediction,
-    predictionLabel: formatHumanLabel(prediction, "Analysis Complete"),
-    riskLevel,
-    reasons,
-    explainability,
-    preventionActions: normalizeActions(data.prevention_actions),
-    recommendation: data.recommendation || null,
-    raw: data
-  };
-}
-
-function riskClass(label, score) {
-  const text = String(label || "").toLowerCase();
-  if (text.includes("high") || text.includes("malicious") || text.includes("suspicious") || (score ?? 0) >= 70) return "risk-high";
-  if (text.includes("medium") || text.includes("review") || (score ?? 0) >= 35) return "risk-medium";
-  return "risk-low";
-}
-
-function Brand() {
+function BrandMark({ className = "" }) {
   return (
-    <button className="brand" type="button" onClick={() => scrollToId("home")} aria-label="CyberShield AI home">
-      <span className="brand-mark"><ShieldIcon /></span>
-      <span className="brand-name">CyberShield <em>AI</em></span>
-    </button>
+    <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M24 4.5 39.5 10.8v11.8c0 9.5-5.9 17-15.5 21.4C14.4 39.6 8.5 32.1 8.5 22.6V10.8L24 4.5Z" stroke="currentColor" strokeWidth="2" />
+      <path d="M31.8 16.6c-1.9-2.1-4.5-3.2-7.5-3.2-6.2 0-10.7 4.5-10.7 10.6s4.5 10.6 10.7 10.6c3.1 0 5.7-1.1 7.6-3.3" stroke="var(--cs-accent)" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="m30.9 20.1 4.5 3.9-4.5 3.9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-function PrimaryButton({ children, onClick, type = "button", className = "", disabled = false }) {
-  return (
-    <button type={type} className={`btn btn-primary ${className}`} onClick={onClick} disabled={disabled}>
-      <span>{children}</span>
-      <ArrowIcon />
-    </button>
-  );
-}
-
-function SecondaryButton({ children, onClick, className = "" }) {
-  return (
-    <button type="button" className={`btn btn-secondary ${className}`} onClick={onClick}>
-      <span>{children}</span>
-      <ArrowIcon />
-    </button>
-  );
-}
-
-function SectionTitle({ eyebrow, title, accent, description }) {
-  const parts = accent && title.includes(accent) ? title.split(accent) : null;
-  return (
-    <div className="section-title" data-reveal>
-      <p className="eyebrow">{eyebrow}</p>
-      <h2>
-        {parts ? <>{parts[0]}<span className="text-gold">{accent}</span>{parts[1]}</> : title}
-      </h2>
-      {description && <p className="section-description">{description}</p>}
-    </div>
-  );
-}
-
-function Navbar({ onOpenMenu, onOpenAdmin, theme }) {
-  return (
-    <header className="navbar-wrap">
-      <nav className="navbar" aria-label="Main navigation">
-        <Brand />
-        <div className="nav-links">
-          {navItems.map(([label, id], index) => (
-            <button
-              type="button"
-              className={index === 0 ? "nav-link is-active" : "nav-link"}
-              onClick={() => scrollToId(id)}
-              key={label}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <div className="nav-actions">
-          <ThemeControl {...theme} compact />
-          <button className="admin-btn" type="button" onClick={onOpenAdmin}>
-            <UserIcon />
-            <span>Admin</span>
-          </button>
-          <button className="menu-btn" type="button" onClick={onOpenMenu} aria-label="Open menu"><MenuIcon /></button>
-        </div>
-      </nav>
-    </header>
-  );
-}
-
-function MobileMenu({ open, onClose, onAdmin, theme }) {
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
-
-  if (!open) return null;
-  return (
-    <div className="mobile-menu-backdrop" onMouseDown={onClose}>
-      <div className="mobile-menu glass-card" onMouseDown={e => e.stopPropagation()}>
-        <div className="mobile-menu-head">
-          <Brand />
-          <button className="icon-btn" type="button" onClick={onClose}><CloseIcon /></button>
-        </div>
-        <div className="mobile-menu-theme">
-          <span>Appearance</span>
-          <ThemeControl {...theme} />
-        </div>
-        <div className="mobile-menu-items">
-          {navItems.map(([label, id]) => (
-            <button key={label} type="button" onClick={() => { onClose(); setTimeout(() => scrollToId(id), 50); }}>
-              <span>{label}</span><ArrowIcon />
-            </button>
-          ))}
-          <button className="mobile-admin" type="button" onClick={() => { onClose(); onAdmin(); }}>
-            <UserIcon /><span>Admin Dashboard</span><ArrowIcon />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function HeroDashboard() {
-  return (
-    <div className="hero-dashboard" aria-label="CyberShield dashboard preview" data-reveal>
-      <div className="dashboard-topbar">
-        <div className="mini-brand"><span className="mini-shield"><ShieldIcon /></span><strong>CyberShield AI</strong></div>
-        <span className="status-chip safe"><span className="status-dot" /> System Protected</span>
-      </div>
-      <div className="dashboard-metrics">
-        <div><span className="metric-icon gold"><FileIcon /></span><strong>1,248</strong><small>Scans today</small></div>
-        <div><span className="metric-icon rose"><ShieldIcon /></span><strong>12</strong><small>Threats blocked</small></div>
-        <div><span className="metric-icon teal"><ZapIcon /></span><strong>99.7%</strong><small>Detection rate</small></div>
-      </div>
-      <div className="dashboard-tabs"><span className="active">URL</span><span>File</span><span>QR Code</span><span>Email</span></div>
-      <div className="dashboard-search"><SearchIcon /><span>Enter a URL to scan for threats...</span><button aria-label="Scan"><ArrowIcon /></button></div>
-      <div className="dashboard-tags"><span className="danger">Malware</span><span className="rose">Phishing</span><span className="amber">Scams</span><span className="green">Safe</span></div>
-      <div className="hero-orbit hero-orbit-one" />
-      <div className="hero-orbit hero-orbit-two" />
-      <div className="hero-shield-art"><ShieldIcon /><span className="lock-mini"><LockIcon /></span></div>
-    </div>
-  );
-}
-
-function Hero({ openScanner }) {
-  return (
-    <section className="hero section" id="home">
-      <div className="ambient ambient-gold" />
-      <div className="ambient ambient-blue" />
-      <div className="container hero-grid">
-        <div className="hero-copy" data-reveal>
-          <div className="platform-pill"><ShieldIcon /><span>AI-Powered Cybersecurity Platform</span></div>
-          <h1>Check before <span className="text-gold">you click.</span></h1>
-          <p className="hero-description">
-            Scan suspicious URLs, files and risky login activity from one powerful workspace. CyberShield AI helps you detect and understand threats before you trust them.
-          </p>
-          <div className="hero-actions">
-            <PrimaryButton onClick={() => openScanner("url")}><SearchIcon /> Start Scan</PrimaryButton>
-            <SecondaryButton onClick={() => window.location.assign("/admin.html")}><GridIcon /> Open Dashboard</SecondaryButton>
-            <button className="text-action" type="button" onClick={() => scrollToId("how-it-works")}><ShieldIcon /> Why this was flagged? <ArrowIcon /></button>
-          </div>
-          <div className="trust-strip">
-            <div><span className="trust-icon"><UserIcon /></span><p><strong>Trusted by students</strong><small>Researchers & organizations</small></p></div>
-            <div><span className="trust-icon"><ShieldIcon /></span><p><strong>AI-powered</strong><small>Threat detection</small></p></div>
-            <div><span className="trust-icon"><ZapIcon /></span><p><strong>Fast & practical</strong><small>Privacy-focused</small></p></div>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <HeroDashboard />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ToolCard({ tool, openScanner }) {
-  const Icon = tool.icon;
-  return (
-    <article className="tool-card glass-card" data-reveal>
-      <span className={`tool-icon tone-${tool.tone}`}><Icon /></span>
-      <div className="tool-copy">
-        <h3>{tool.title}</h3>
-        <p>{tool.description}</p>
-      </div>
-      <button
-        className="card-open"
-        type="button"
-        aria-label={`Open ${tool.title}`}
-        onClick={() => {
-          if (tool.id === "threats") scrollToId("threat-intelligence");
-          else if (tool.id === "awareness") scrollToId("benefits");
-          else openScanner(tool.id);
-        }}
-      >
-        <ArrowIcon />
-      </button>
-    </article>
-  );
-}
-
-function ToolsSection({ openScanner }) {
-  return (
-    <section className="section section-soft" id="tools">
-      <div className="container">
-        <div className="section-heading-row">
-          <SectionTitle eyebrow="Our tools" title="Everything you need to stay safer online" accent="safer online" />
-          <button className="section-link" type="button" onClick={() => openScanner("url")}>Start a scan <ArrowIcon /></button>
-        </div>
-        <div className="tools-grid">
-          {tools.map(tool => <ToolCard key={tool.id} tool={tool} openScanner={openScanner} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function HowItWorks() {
-  return (
-    <section className="section" id="how-it-works">
-      <div className="container">
-        <div className="section-heading-row">
-          <SectionTitle
-            eyebrow="How it works"
-            title="Powerful protection in 4 simple steps"
-            accent="4 simple steps"
-            description="The workflow stays understandable: input, analysis, result and safer action."
-          />
-          <button type="button" className="section-link" onClick={() => scrollToId("threat-intelligence")}>See insights <ArrowIcon /></button>
-        </div>
-        <div className="steps-grid">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <article className="step-card glass-card" key={step.title} data-reveal>
-                <div className="step-top"><span className="step-number">{index + 1}</span><span className="step-icon"><Icon /></span></div>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CountValue({ value, suffix = "" }) {
+function LiquidButton({ children, type = "button", className = "", disabled = false, onClick }) {
   const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
+  function move(e) {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0]?.isIntersecting) {
-        setVisible(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.4 });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty("--lb-x", `${x * 26}px`);
+    el.style.setProperty("--lb-y", `${y * 18}px`);
+  }
+  function leave() {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--lb-x", "0px");
+    el.style.setProperty("--lb-y", "0px");
+  }
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={`csx-liquid-btn ${className}`}
+      onPointerMove={move}
+      onPointerLeave={leave}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <span className="csx-liquid-blob csx-liquid-a" />
+      <span className="csx-liquid-blob csx-liquid-b" />
+      <span className="csx-liquid-sheen" />
+      <span className="csx-liquid-label">{children}</span>
+      <ArrowIcon />
+    </button>
+  );
+}
 
+function usePointerField(ref) {
   useEffect(() => {
-    if (!visible) return;
-    const started = performance.now();
-    const duration = 800;
-    const tick = now => {
-      const p = Math.min(1, (now - started) / duration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(value * eased);
-      if (p < 1) requestAnimationFrame(tick);
+    const root = ref.current;
+    if (!root) return;
+    let raf = 0;
+    let tx = window.innerWidth * 0.72;
+    let ty = window.innerHeight * 0.28;
+    let cx = tx;
+    let cy = ty;
+    let vx = 0;
+    let vy = 0;
+    let lastX = tx;
+    let lastY = ty;
+    let lastT = performance.now();
+
+    const onMove = (e) => {
+      const now = performance.now();
+      const dt = Math.max(12, now - lastT);
+      tx = e.clientX;
+      ty = e.clientY;
+      vx = (e.clientX - lastX) / dt * 16.67;
+      vy = (e.clientY - lastY) / dt * 16.67;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      lastT = now;
     };
-    requestAnimationFrame(tick);
-  }, [visible, value]);
 
-  const formatted = Number.isInteger(value) ? Math.round(display).toLocaleString() : display.toFixed(1);
-  return <span ref={ref}>{formatted}{suffix}</span>;
+    const tick = () => {
+      cx += (tx - cx) * 0.115;
+      cy += (ty - cy) * 0.115;
+      vx *= 0.90;
+      vy *= 0.90;
+      const speed = Math.min(1, Math.hypot(vx, vy) / 42);
+      root.style.setProperty("--mx", `${cx}px`);
+      root.style.setProperty("--my", `${cy}px`);
+      root.style.setProperty("--mvx", `${Math.max(-36, Math.min(36, vx))}px`);
+      root.style.setProperty("--mvy", `${Math.max(-36, Math.min(36, vy))}px`);
+      root.style.setProperty("--mspeed", speed.toFixed(3));
+      raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [ref]);
 }
 
-function ThreatMap() {
-  const hotspots = [
-    [14, 39], [22, 54], [31, 33], [42, 45], [49, 29], [55, 40], [62, 47], [70, 35], [77, 51], [84, 42], [65, 63], [46, 61]
-  ];
-  return (
-    <div className="threat-map">
-      <div className="map-grid" />
-      <div className="map-continent continent-a" />
-      <div className="map-continent continent-b" />
-      <div className="map-continent continent-c" />
-      <div className="map-continent continent-d" />
-      {hotspots.map(([x, y], i) => <span className={`hotspot hotspot-${i % 3}`} style={{ left: `${x}%`, top: `${y}%` }} key={`${x}-${y}`} />)}
-      <div className="map-header"><span><GlobeIcon /> Global Threat Activity</span><b><span className="status-dot" /> Live</b></div>
-    </div>
+function normalizeScore(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return null;
+  return n <= 1 ? n * 100 : n;
+}
+
+function assessment(result) {
+  if (!result) return null;
+  const prediction =
+    result.prediction ??
+    result.label ??
+    result.verdict ??
+    result.classification ??
+    result.status ??
+    result.result ??
+    "Assessment complete";
+  const risk =
+    result.risk_level ??
+    result.risk ??
+    result.severity ??
+    result.threat_level ??
+    prediction;
+  const score = normalizeScore(
+    result.risk_score ??
+    result.score ??
+    result.probability ??
+    result.malicious_probability ??
+    result.confidence
   );
+  const confidence = normalizeScore(result.confidence);
+  const reasonSource =
+    result.reasons ??
+    result.reason ??
+    result.indicators ??
+    result.findings ??
+    result.explanation ??
+    [];
+  const reasons = Array.isArray(reasonSource)
+    ? reasonSource
+    : typeof reasonSource === "string"
+      ? [reasonSource]
+      : reasonSource && typeof reasonSource === "object"
+        ? Object.entries(reasonSource).map(([k, v]) => `${k.replaceAll("_", " ")}: ${String(v)}`)
+        : [];
+  return { prediction: String(prediction), risk: String(risk), score, confidence, reasons };
 }
 
-function ThreatIntelligence({ stats }) {
-  const scans = Number(stats?.total_scans ?? stats?.scans ?? 1248) || 1248;
-  const threats = Number(stats?.threats ?? stats?.malicious ?? 12) || 12;
-  const rate = Number(stats?.detection_rate ?? stats?.accuracy ?? 99.7) || 99.7;
+function riskTone(value, score) {
+  const s = String(value || "").toLowerCase();
+  if (/malicious|high|danger|phish|critical|unsafe|threat/.test(s) || (score ?? 0) >= 70) return "high";
+  if (/medium|moderate|review|suspicious|warn/.test(s) || (score ?? 0) >= 35) return "medium";
+  return "safe";
+}
+
+function ResultPanel({ result, loading, error }) {
+  if (loading) {
+    return (
+      <aside className="csx-result csx-result-loading">
+        <div className="csx-loader-orbit"><span /></div>
+        <strong>Analyzing security signals</strong>
+        <p>CyberShield is combining available indicators into a decision-support result.</p>
+      </aside>
+    );
+  }
+  if (error) {
+    return (
+      <aside className="csx-result">
+        <span className="csx-kicker">ANALYSIS ERROR</span>
+        <h3>Could not complete this scan</h3>
+        <p className="csx-error">{error}</p>
+      </aside>
+    );
+  }
+  const a = assessment(result);
+  if (!a) {
+    return (
+      <aside className="csx-result csx-result-empty">
+        <span className="csx-kicker">LATEST ASSESSMENT</span>
+        <div className="csx-empty-orbit"><ShieldIcon /></div>
+        <h3>Ready for analysis</h3>
+        <p>Your result will appear here with risk score, evidence and recommended next action.</p>
+      </aside>
+    );
+  }
+  const tone = riskTone(a.risk, a.score);
+  const score = Math.max(0, Math.min(100, a.score ?? (tone === "high" ? 84 : tone === "medium" ? 52 : 18)));
   return (
-    <section className="section section-soft" id="threat-intelligence">
-      <div className="container">
-        <div className="section-heading-row threat-title-row">
-          <SectionTitle
-            eyebrow="Live threat intelligence"
-            title="Real-time insights. A safer internet."
-            accent="A safer internet."
-            description="A dashboard view of scans, blocked threats and the signals CyberShield uses to explain risk."
-          />
-          <button type="button" className="section-link" onClick={() => window.location.assign("/admin.html")}>Open analytics <ArrowIcon /></button>
-        </div>
-        <div className="threat-layout">
-          <div className="metric-stack" data-reveal>
-            <div className="stat-card glass-card"><span className="stat-icon blue"><FileIcon /></span><div><strong><CountValue value={scans} /></strong><small>Scans tracked</small></div><em>+12%</em></div>
-            <div className="stat-card glass-card"><span className="stat-icon rose"><ShieldIcon /></span><div><strong><CountValue value={threats} /></strong><small>Threats blocked</small></div><em className="down">Live</em></div>
-            <div className="stat-card glass-card"><span className="stat-icon green"><ZapIcon /></span><div><strong><CountValue value={rate} suffix="%" /></strong><small>Detection signal</small></div><em>+2.1%</em></div>
-            <div className="stat-card glass-card"><span className="stat-icon purple"><UserIcon /></span><div><strong>50K+</strong><small>Protected users</small></div><em>Growing</em></div>
-          </div>
-          <div className="map-card glass-card" data-reveal>
-            <ThreatMap />
-          </div>
-          <div className="chart-stack" data-reveal>
-            <div className="mini-chart glass-card">
-              <div className="mini-chart-head"><strong>Top Threat Types</strong><small>Last 30 days</small></div>
-              {[
-                ["Phishing", 36, "pink"], ["Malware", 28, "purple"], ["Scams", 18, "orange"], ["Botnets", 10, "gold"], ["Suspicious IPs", 8, "blue"]
-              ].map(([name, width, tone]) => (
-                <div className="threat-row" key={name}><span>{name}</span><div className="bar"><i className={tone} style={{ width: `${width * 2.3}%` }} /></div><b>{width}%</b></div>
-              ))}
-            </div>
-            <div className="blocked-chart glass-card">
-              <div className="mini-chart-head"><strong>Threats Blocked Over Time</strong><small>7 days</small></div>
-              <div className="bars">
-                {[32, 46, 39, 58, 64, 73, 81].map((v, i) => <i key={i} style={{ height: `${v}%` }} />)}
-              </div>
-            </div>
-          </div>
+    <aside className={`csx-result tone-${tone}`}>
+      <span className="csx-kicker">LATEST ASSESSMENT</span>
+      <h3>{a.prediction}</h3>
+      <span className={`csx-risk-pill ${tone}`}>{a.risk}</span>
+      <div className="csx-score-wrap">
+        <div className="csx-score-ring" style={{ "--score": `${score * 3.6}deg` }}>
+          <div><strong>{Math.round(score)}</strong><span>%</span><small>RISK SCORE</small></div>
         </div>
       </div>
-    </section>
-  );
-}
-
-function Benefits() {
-  return (
-    <section className="section" id="benefits">
-      <div className="container">
-        <div className="section-heading-row">
-          <SectionTitle
-            eyebrow="Why CyberShield AI"
-            title="More protection. Less risk. Built for everyone."
-            accent="Built for everyone."
-            description="A modern academic security platform built around explainable workflows and practical detection signals."
-          />
-        </div>
-        <div className="benefits-grid">
-          {benefits.map(item => {
-            const Icon = item.icon;
-            return (
-              <a
-                className="benefit-card glass-card official-resource-card"
-                key={item.title}
-                data-reveal
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${item.title} — open official Government of India cyber resource`}
-              >
-                <div className="benefit-top">
-                  <span className="benefit-icon"><Icon /></span>
-                  <span className="benefit-arrow" aria-hidden="true"><ArrowIcon /></span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <span className="benefit-source">{item.source} ↗</span>
-              </a>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  const [index, setIndex] = useState(0);
-  const ordered = useMemo(() => testimonials.map((_, i) => testimonials[(index + i) % testimonials.length]), [index]);
-  return (
-    <section className="section section-soft" id="testimonials">
-      <div className="container">
-        <div className="section-heading-row testimonial-heading">
-          <SectionTitle eyebrow="Trusted worldwide" title="Loved by security-conscious users" />
-          <div className="carousel-controls">
-            <button type="button" onClick={() => setIndex((index + testimonials.length - 1) % testimonials.length)} aria-label="Previous testimonials"><ChevronLeft /></button>
-            <button type="button" onClick={() => setIndex((index + 1) % testimonials.length)} aria-label="Next testimonials"><ChevronRight /></button>
-          </div>
-        </div>
-        <div className="testimonials-grid">
-          {ordered.map((person, i) => (
-            <article className="testimonial-card glass-card" key={`${person.name}-${index}-${i}`} data-reveal>
-              <div className="author-row">
-                <div className="avatar">{person.initials}</div>
-                <div><strong>{person.name}</strong><small>{person.role}</small></div>
-                <span className="stars">★★★★★</span>
-              </div>
-              <p>“{person.quote}”</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FinalCTA({ openScanner }) {
-  return (
-    <section className="section cta-section">
-      <div className="container">
-        <div className="cta-banner" data-reveal>
-          <div className="cta-grid-lines" />
-          <div className="cta-copy">
-            <div className="cta-pill"><ShieldIcon /> Stay ahead of threats</div>
-            <h2>Be one step ahead of <span>cyber threats.</span></h2>
-            <p>Use CyberShield AI as a fast security check before you trust a link, file or unusual login event.</p>
-            <div className="cta-actions">
-              <PrimaryButton onClick={() => openScanner("url")}><SearchIcon /> Start Scanning Now</PrimaryButton>
-              <SecondaryButton onClick={() => window.location.assign("/admin.html")}><GridIcon /> View Dashboard</SecondaryButton>
-            </div>
-          </div>
-          <div className="cta-benefits">
-            <div><span><ShieldIcon /></span>AI-assisted analysis</div>
-            <div><span><LockIcon /></span>Privacy-minded workflow</div>
-            <div><span><ZapIcon /></span>Fast feedback</div>
-          </div>
-          <div className="cta-shield">
-            <div className="cta-shield-ring" />
-            <div className="cta-shield-core"><ShieldIcon /><span><LockIcon /></span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Footer({ onOpenApiDocs, onOpenComplaintGuide }) {
-  return (
-    <footer className="footer">
-      <div className="container footer-grid">
-        <div className="footer-brand"><Brand /><p>Check. Scan. Stay safer.</p><div className="footer-status"><span className="status-dot" /> System online</div></div>
-        <div className="footer-column"><strong>Product</strong><button onClick={() => scrollToId("tools")}>URL Scanner</button><button onClick={() => scrollToId("tools")}>File Scanner</button><button onClick={() => scrollToId("tools")}>Login Risk</button></div>
-        <div className="footer-column"><strong>Platform</strong><button onClick={() => scrollToId("threat-intelligence")}>Threat Intelligence</button><button onClick={() => scrollToId("benefits")}>Cyber Awareness</button><a href="/admin.html">Admin Dashboard</a></div>
-        <div className="footer-column"><strong>Resources</strong><button onClick={onOpenApiDocs}>API Docs</button><button onClick={() => scrollToId("how-it-works")}>How It Works</button><button onClick={onOpenComplaintGuide}>Report Cybercrime</button></div>
-        <div className="complaint-footer-card">
-          <div className="complaint-footer-icon"><ShieldIcon /></div>
-          <div className="complaint-footer-copy"><strong>Need to report a cybercrime?</strong><p>Get the official India reporting route, evidence checklist and a complaint draft in one guided flow.</p></div>
-          <button className="complaint-footer-action" type="button" onClick={onOpenComplaintGuide}><span>Start complaint guide</span><ArrowIcon /></button>
-        </div>
-      </div>
-      <div className="container footer-bottom"><span>© 2026 CyberShield AI. Academic cybersecurity project.</span><div><span>Privacy First</span><span>Static file analysis</span><span>JWT admin APIs</span></div></div>
-    </footer>
-  );
-}
-
-
-
-const CYBERCRIME_PORTAL_URL = "https://www.cybercrime.gov.in/";
-const CYBERCRIME_TRACK_URL = "https://www.cybercrime.gov.in/webform/chkackstatus.aspx";
-const CYBERCRIME_SUSPECT_URL = "https://cybercrime.gov.in/Webform/cyber_suspect.aspx";
-const CYBERCRIME_NODAL_URL = "https://www.cybercrime.gov.in/webform/Crime_NodalGrivanceList.aspx";
-
-function openExternal(url) {
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-
-function ComplaintGuideModal({ open, onClose }) {
-  const [draft, setDraft] = useState({
-    incidentType: "Online financial fraud",
-    incidentDate: "",
-    platform: "",
-    identifier: "",
-    amount: "",
-    reference: "",
-    description: "",
-    evidence: ""
-  });
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    setCopied(false);
-  }, [open]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
-
-  if (!open) return null;
-
-  const update = (key, value) => setDraft(previous => ({ ...previous, [key]: value }));
-  const complaintText = [
-    `Subject: Cybercrime complaint - ${draft.incidentType || "Cyber incident"}`,
-    "",
-    `Incident type: ${draft.incidentType || "Not specified"}`,
-    `Incident date/time: ${draft.incidentDate || "Not specified"}`,
-    `Platform / website / app: ${draft.platform || "Not specified"}`,
-    `Suspicious phone / email / URL / account: ${draft.identifier || "Not specified"}`,
-    `Amount lost (if any): ${draft.amount || "Not applicable / not specified"}`,
-    `Existing complaint reference: ${draft.reference || "Not filed yet"}`,
-    "",
-    "Incident description:",
-    draft.description || "Add a clear chronological description of what happened.",
-    "",
-    "Evidence available:",
-    draft.evidence || "Screenshots, transaction IDs, URLs, emails, phone numbers, chat logs or other supporting material.",
-    "",
-    "I request that this cybercrime complaint / follow-up be reviewed and appropriate action be taken."
-  ].join("\n");
-
-  async function copyDraft() {
-    try {
-      await navigator.clipboard.writeText(complaintText);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      setCopied(false);
-    }
-  }
-
-  function openEmailDraft() {
-    const subject = `Cybercrime complaint - ${draft.incidentType || "Cyber incident"}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(complaintText)}`;
-  }
-
-  return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="scanner-modal complaint-guide-modal" onMouseDown={event => event.stopPropagation()}>
-        <div className="scanner-modal-head">
-          <div>
-            <span className="tool-icon tone-gold"><ShieldIcon /></span>
-            <div><small>OFFICIAL REPORTING ASSISTANT</small><h2>Cybercrime Complaint Guide</h2></div>
-          </div>
-          <button className="icon-btn" type="button" onClick={onClose} aria-label="Close complaint guide"><CloseIcon /></button>
-        </div>
-
-        <div className="scanner-content complaint-guide-content">
-          <div className="complaint-privacy-note"><LockIcon /><span>CyberShield does not submit this form to the Government and does not store these draft fields. Use the official portal buttons below to file or track a complaint.</span></div>
-
-          <section className="complaint-route-section">
-            <div className="complaint-section-heading"><small>STEP 1</small><h3>Choose the right reporting route</h3><p>Select the situation closest to what happened.</p></div>
-            <div className="complaint-route-grid">
-              <article className="complaint-route-card urgent">
-                <span className="route-kicker">MONEY LOST / FINANCIAL FRAUD</span>
-                <h4>Act immediately</h4>
-                <p>For cyber financial fraud, call the national helpline first, then continue the official online complaint process.</p>
-                <div className="route-actions"><a className="route-primary" href="tel:1930">Call 1930</a><button type="button" onClick={() => openExternal(CYBERCRIME_PORTAL_URL)}>Open official portal <ArrowIcon /></button></div>
-              </article>
-
-              <article className="complaint-route-card">
-                <span className="route-kicker">OTHER CYBERCRIME</span>
-                <h4>File an official complaint</h4>
-                <p>Use the National Cyber Crime Reporting Portal for hacking, social-media crime, ransomware, online fraud and other cybercrimes.</p>
-                <button type="button" onClick={() => openExternal(CYBERCRIME_PORTAL_URL)}>Register complaint <ArrowIcon /></button>
-              </article>
-
-              <article className="complaint-route-card">
-                <span className="route-kicker">SUSPICIOUS IDENTIFIER ONLY</span>
-                <h4>Report a suspect</h4>
-                <p>Report suspicious website URLs, phone numbers, email IDs, WhatsApp/Telegram handles, SMS headers or social-media URLs to I4C.</p>
-                <button type="button" onClick={() => openExternal(CYBERCRIME_SUSPECT_URL)}>Report suspect <ArrowIcon /></button>
-              </article>
-
-              <article className="complaint-route-card">
-                <span className="route-kicker">ALREADY FILED</span>
-                <h4>Track or follow up</h4>
-                <p>Use your acknowledgement number to track the complaint. If needed, use the official State/UT nodal and grievance contact list for follow-up.</p>
-                <div className="route-actions"><button type="button" onClick={() => openExternal(CYBERCRIME_TRACK_URL)}>Track complaint <ArrowIcon /></button><button type="button" className="route-secondary" onClick={() => openExternal(CYBERCRIME_NODAL_URL)}>Nodal contacts</button></div>
-              </article>
-            </div>
-          </section>
-
-          <section className="complaint-evidence-section">
-            <div className="complaint-section-heading"><small>STEP 2</small><h3>Keep the evidence ready</h3><p>Do not delete messages or transaction information before recording the details.</p></div>
-            <div className="evidence-grid">
-              {["Screenshots / screen recordings", "Transaction ID / UTR / bank details", "Suspicious URL, email or phone number", "Chat, SMS or social-media messages", "Date, time and timeline of events", "Complaint acknowledgement number, if already filed"].map(item => <div className="evidence-item" key={item}><CheckIcon /><span>{item}</span></div>)}
-            </div>
-          </section>
-
-          <section className="complaint-draft-section">
-            <div className="complaint-section-heading"><small>STEP 3</small><h3>Prepare a complaint draft</h3><p>Use this as a writing aid before filing on the official portal or preparing a follow-up email.</p></div>
-            <div className="complaint-draft-grid">
-              <label>Incident type<select value={draft.incidentType} onChange={e => update("incidentType", e.target.value)}><option>Online financial fraud</option><option>Phishing / fake website</option><option>Account hacked / unauthorized access</option><option>Social media / messaging abuse</option><option>Ransomware / malware</option><option>Other cybercrime</option></select></label>
-              <label>Incident date / time<input type="datetime-local" value={draft.incidentDate} onChange={e => update("incidentDate", e.target.value)} /></label>
-              <label>Platform / website / app<input value={draft.platform} onChange={e => update("platform", e.target.value)} placeholder="Example: WhatsApp, bank app, website" /></label>
-              <label>Phone / email / URL / account<input value={draft.identifier} onChange={e => update("identifier", e.target.value)} placeholder="Suspicious identifier" /></label>
-              <label>Amount lost (if any)<input value={draft.amount} onChange={e => update("amount", e.target.value)} placeholder="Example: ₹10,000" /></label>
-              <label>Complaint reference (optional)<input value={draft.reference} onChange={e => update("reference", e.target.value)} placeholder="Acknowledgement number" /></label>
-              <label className="draft-wide">What happened?<textarea value={draft.description} onChange={e => update("description", e.target.value)} rows="5" placeholder="Write the incident in time order: what you clicked, what was asked, what happened next..." /></label>
-              <label className="draft-wide">Evidence available<textarea value={draft.evidence} onChange={e => update("evidence", e.target.value)} rows="3" placeholder="List screenshots, transaction IDs, emails, URLs, phone numbers, chat records..." /></label>
-            </div>
-
-            <div className="complaint-draft-preview"><div className="draft-preview-head"><strong>Draft preview</strong><span>Local writing aid only</span></div><pre>{complaintText}</pre></div>
-            <div className="complaint-draft-actions"><PrimaryButton onClick={copyDraft}>{copied ? "Copied" : "Copy complaint draft"}</PrimaryButton><SecondaryButton onClick={openEmailDraft}><MailIcon /> Prepare email draft</SecondaryButton><button className="official-portal-button" type="button" onClick={() => openExternal(CYBERCRIME_PORTAL_URL)}>Continue on official portal <ArrowIcon /></button></div>
-            <p className="complaint-email-note">For follow-up email, use the appropriate official State/UT Nodal or Grievance Officer contact from the Government list. Do not send passwords, PINs or OTPs by email.</p>
-          </section>
-
-          <section className="complaint-example-section">
-            <div className="complaint-section-heading"><small>EXAMPLE</small><h3>What a useful complaint looks like</h3></div>
-            <div className="example-complaint-card"><strong>Phishing payment example</strong><p>“On 3 October at 2:15 PM, I received a message claiming to be from my bank. I opened the linked page and entered my mobile number. I then noticed the domain was not the bank’s official domain. No OTP or password was shared. I have screenshots of the message, the URL and the page.”</p></div>
-          </section>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ApiDocsModal({ open, onClose }) {
-  const [schema, setSchema] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!open) return;
-    let active = true;
-    setLoading(true);
-    setError("");
-
-    fetch(`${API_BASE_URL}/openapi.json`)
-      .then(async response => {
-        if (!response.ok) throw new Error(`Unable to load API reference (${response.status})`);
-        return response.json();
-      })
-      .then(data => {
-        if (active) setSchema(data);
-      })
-      .catch(err => {
-        if (active) setError(err.message || "Unable to load API reference.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => { active = false; };
-  }, [open]);
-
-  if (!open) return null;
-
-  const endpoints = schema
-    ? Object.entries(schema.paths || {}).flatMap(([path, methods]) =>
-        Object.entries(methods || {})
-          .filter(([method]) => ["get", "post", "put", "patch", "delete"].includes(method.toLowerCase()))
-          .map(([method, meta]) => ({
-            method: method.toUpperCase(),
-            path,
-            summary: meta?.summary || meta?.operationId || "CyberShield API endpoint"
-          }))
-      )
-    : [];
-
-  const required = [
-    "/analyze",
-    "/scan-file",
-    "/scan-qr",
-    "/analyze-email",
-    "/analyze-login",
-    "/admin/login",
-    "/admin/stats",
-    "/admin/recent"
-  ];
-  const availablePaths = new Set(Object.keys(schema?.paths || {}));
-  const missing = required.filter(path => !availablePaths.has(path));
-
-  return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="scanner-modal api-docs-modal" onMouseDown={event => event.stopPropagation()}>
-        <div className="scanner-modal-head">
-          <div>
-            <span className="tool-icon tone-gold"><DatabaseIcon /></span>
-            <div>
-              <small>CYBERSHIELD DEVELOPER REFERENCE</small>
-              <h2>API Docs</h2>
-            </div>
-          </div>
-          <button className="icon-btn" type="button" onClick={onClose} aria-label="Close API docs"><CloseIcon /></button>
-        </div>
-
-        <div className="scanner-content api-docs-content">
-          {loading && <div className="api-loading">Loading current API reference…</div>}
-          {error && <div className="error-box">{error}</div>}
-
-          {schema && (
-            <>
-              <div className="api-summary-card">
-                <div>
-                  <small>LIVE BACKEND</small>
-                  <h3>{schema.info?.title || "CyberShield AI API"}</h3>
-                  <p>Current deployed backend reference, shown inside CyberShield without opening Swagger UI.</p>
-                </div>
-                <div className="api-version">v{schema.info?.version || "—"}</div>
-              </div>
-
-              <div className={`api-compat ${missing.length ? "api-compat-warning" : "api-compat-ok"}`}>
-                <strong>{missing.length ? "Frontend / backend mismatch detected" : "Frontend and backend endpoints are compatible"}</strong>
-                <span>
-                  {missing.length
-                    ? `Missing from deployed backend: ${missing.join(", ")}`
-                    : "All endpoints required by the current frontend are available."}
-                </span>
-              </div>
-
-              <div className="api-docs-list">
-                {endpoints.map(endpoint => (
-                  <article className="api-endpoint" key={`${endpoint.method}-${endpoint.path}`}>
-                    <span className={`api-method method-${endpoint.method.toLowerCase()}`}>{endpoint.method}</span>
-                    <code>{endpoint.path}</code>
-                    <p>{endpoint.summary}</p>
-                  </article>
-                ))}
-              </div>
-
-              <div className="notice api-doc-note">
-                <ShieldIcon />
-                <span>Admin endpoints still require the same JWT bearer authentication. This page is a read-only product reference and does not expose credentials.</span>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ResultMetric({ label, value, tone = "neutral" }) {
-  if (value == null || value === "") return null;
-  return (
-    <div className={`result-metric metric-${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function ResultDetails({ toolId, result, context }) {
-  const rows = [];
-  const add = (label, value) => {
-    if (value != null && value !== "") rows.push([label, value]);
-  };
-
-  if (toolId === "url") {
-    add("Scanned URL", result.url || context?.url);
-    add("Hostname", result.hostname);
-    add("Decision source", formatHumanLabel(result.decision_source, ""));
-    if (typeof result.trusted_domain === "boolean") {
-      add("Trusted domain check", result.trusted_domain ? "Recognized trusted domain" : "No trusted-domain override");
-    }
-  }
-
-  if (toolId === "file") {
-    add("File name", result.file_name || context?.file?.name);
-    add("Detected type", formatHumanLabel(result.detected_type || result.file_type || result.mime_type, ""));
-    if (result.file_size_kb != null) add("File size", `${Number(result.file_size_kb).toFixed(2)} KB`);
-    else if (context?.file?.size) add("File size", `${(context.file.size / 1024).toFixed(2)} KB`);
-    add("SHA-256 fingerprint", result.sha256);
-  }
-
-  if (toolId === "qr") {
-    add("Decoded type", formatHumanLabel(result.decoded_type, ""));
-    add("Detected destination", result.extracted_url);
-    add("Decoded content", result.decoded_content);
-  }
-
-  if (toolId === "email") {
-    add("Sender", result.sender_email || context?.email?.sender_email);
-    add("Reply-To", result.reply_to_email || context?.email?.reply_to_email);
-    add("Subject", result.subject || context?.email?.subject);
-    add("Detection method", formatHumanLabel(result.detection_method, ""));
-    if (Number(result.highest_embedded_url_risk || 0) > 0) {
-      add("Highest embedded URL risk", `${Number(result.highest_embedded_url_risk).toFixed(0)}%`);
-    }
-  }
-
-  if (toolId === "login") {
-    add("User", result.user_identifier || context?.login?.user_identifier);
-    add("IP address", result.ip_address || context?.login?.ip_address);
-    if (context?.login?.failed_attempts != null) add("Failed attempts", context.login.failed_attempts);
-    if (context?.login?.login_hour != null) add("Login hour", `${context.login.login_hour}:00`);
-  }
-
-  if (rows.length === 0) return null;
-
-  return (
-    <div className="result-details-card">
-      <div className="result-section-title"><span>Assessment details</span></div>
-      <div className="result-details-grid">
-        {rows.map(([label, value]) => (
-          <div className={`result-detail-row ${label.includes("SHA-256") || label.includes("content") || label.includes("URL") ? "detail-wide" : ""}`} key={label}>
-            <span>{label}</span>
-            <strong>{String(value)}</strong>
-          </div>
+      <div className="csx-result-divider" />
+      <h4>Why this result</h4>
+      <div className="csx-reasons">
+        {(a.reasons.length ? a.reasons : [
+          tone === "safe" ? "No strong malicious indicator was detected." : "The submitted item contains signals that require additional review.",
+          "CyberShield combines multiple indicators rather than relying on a single check."
+        ]).slice(0, 5).map((item, i) => (
+          <div key={i}><span className={`csx-dot ${tone}`} /><p>{item}</p></div>
         ))}
       </div>
-    </div>
+      {a.confidence != null && (
+        <div className="csx-confidence"><span>Confidence</span><strong>{Math.round(a.confidence)}%</strong></div>
+      )}
+      <div className="csx-result-divider" />
+      <h4>Recommended action</h4>
+      <p className="csx-recommend">
+        {tone === "high"
+          ? "Do not trust or open this item until it is verified through a trusted security process."
+          : tone === "medium"
+            ? "Treat this item with caution and verify the source before proceeding."
+            : "No major threat signal was detected, but continue to verify important actions independently."}
+      </p>
+    </aside>
   );
 }
 
-function defaultRecommendation(normalized) {
-  const text = `${normalized.prediction} ${normalized.riskLevel}`.toLowerCase();
-  if (text.includes("malicious") || text.includes("high") || text.includes("suspicious")) {
-    return "Do not trust this item yet. Avoid opening links, entering credentials or continuing the activity until it is independently verified.";
-  }
-  if (text.includes("review") || text.includes("medium")) {
-    return "Some signals deserve verification. Confirm the source through an official channel before you continue.";
-  }
-  return "No strong high-risk indicators were detected. Continue using normal security checks and verify anything unexpected.";
-}
-
-function ResultPanel({ result, toolId, context }) {
-  const normalized = normalizeResult(result);
-  if (!normalized) return null;
-
-  const cls = riskClass(normalized.riskLevel || normalized.prediction, normalized.score);
-  const scoreText = normalized.score == null ? "✓" : `${Math.round(normalized.score)}%`;
-  const recommendation = normalized.recommendation || defaultRecommendation(normalized);
-  const eventSaved = result.security_event?.saved ?? result.database_saved;
-  const incidentActive = Boolean(result.incident?.created_or_updated || result.incident?.incident_code);
-  const sessionActive = Boolean(result.session_id);
-  const explanationItems = normalized.explainability?.items || [];
-
+function FileDrop({ file, setFile, accept, icon: Icon = FileIcon, title, subtitle }) {
   return (
-    <div className={`result-panel ${cls}`}>
-      <div className="result-hero-row">
-       <div
-  className="result-gauge"
-  style={{
-    background: `conic-gradient(
-      ${
-        cls === "risk-high"
-          ? "#ef4444"
-          : cls === "risk-medium"
-            ? "#f59e0b"
-            : "#22c55e"
-      } 0% ${Math.max(0, Math.min(100, Number(normalized.score ?? 0)))}%,
-      rgba(148, 163, 184, 0.18)
-      ${Math.max(0, Math.min(100, Number(normalized.score ?? 0)))}% 100%
-    )`,
-  }}
->
-          <span>{scoreText}</span>
-        </div>
-        <div className="result-hero-copy">
-          <small>CyberShield assessment</small>
-          <h3>{normalized.predictionLabel}</h3>
-          <div className="result-badges">
-            {normalized.riskLevel && <span className={`risk-badge ${cls}`}>{normalized.riskLevel} RISK</span>}
-            {sessionActive && <span className="status-badge">Session linked</span>}
-            {incidentActive && <span className="status-badge status-alert">Incident tracked</span>}
-          </div>
-          <p>CyberShield combines detection signals into a decision-support result. Verify important actions before proceeding.</p>
-        </div>
-      </div>
-
-      <div className="result-metrics-grid">
-        <ResultMetric label="Risk score" value={normalized.score == null ? null : `${normalized.score.toFixed(1)}%`} tone={cls.replace("risk-", "")} />
-        <ResultMetric label="Confidence" value={normalized.confidence == null ? null : `${normalized.confidence.toFixed(1)}%`} />
-        <ResultMetric label="Prediction" value={normalized.predictionLabel} />
-        <ResultMetric label="Recorded" value={eventSaved === true ? "Saved to security log" : eventSaved === false ? "Not saved" : null} />
-      </div>
-
-      <ResultDetails toolId={toolId} result={result} context={context} />
-
-      {normalized.reasons.length > 0 && (
-        <div className="result-section result-reasons">
-          <div className="result-section-title"><span>Why this result?</span></div>
-          <ul>
-            {normalized.reasons.slice(0, 8).map((item, index) => (
-              <li key={`${item}-${index}`}><span className="reason-check"><CheckIcon /></span><span>{item}</span></li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {explanationItems.length > 0 && (
-        <details className="explanation-card">
-          <summary>{normalized.explainability?.title || "Why CyberShield reached this result"}</summary>
-          <div className="explanation-list">
-            {explanationItems.slice(0, 8).map((item, index) => <p key={`${item}-${index}`}>{item}</p>)}
-          </div>
-        </details>
-      )}
-
-      {normalized.preventionActions.length > 0 && (
-        <div className="result-section prevention-card">
-          <div className="result-section-title"><span>Recommended next steps</span></div>
-          <div className="prevention-list">
-            {normalized.preventionActions.slice(0, 6).map((action, index) => (
-              <div className="prevention-item" key={`${action.title}-${index}`}>
-                <span className={`priority-dot priority-${action.priority}`} />
-                <span>{action.title}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="recommendation-card">
-        <span className="recommendation-icon"><ShieldIcon /></span>
-        <div><strong>What should I do?</strong><p>{recommendation}</p></div>
-      </div>
-    </div>
+    <label className="csx-file-drop">
+      <input type="file" accept={accept} onChange={(e) => setFile(e.target.files?.[0] || null)} />
+      <span className="csx-upload-bubble"><Icon /></span>
+      <strong>{file ? file.name : title}</strong>
+      <small>{subtitle}</small>
+    </label>
   );
 }
 
-function ScannerModal({ active, onClose }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [result, setResult] = useState(null);
+function ToolForm({ toolId, onRun, loading }) {
   const [url, setUrl] = useState("");
   const [file, setFile] = useState(null);
+  const [qr, setQr] = useState(null);
+  const [email, setEmail] = useState({ sender_email: "", reply_to_email: "", subject: "", body: "" });
   const [login, setLogin] = useState({
     user_identifier: "",
     ip_address: "",
@@ -1217,28 +275,126 @@ function ScannerModal({ active, onClose }) {
     unusual_location: false,
     login_hour: new Date().getHours()
   });
-  const [email, setEmail] = useState({ sender_email: "", reply_to_email: "", subject: "", body: "" });
-  const [qrFile, setQrFile] = useState(null);
 
-  const tool = tools.find(t => t.id === active);
-  useEffect(() => {
-    setError("");
-    setResult(null);
-  }, [active]);
+  if (toolId === "url") {
+    return (
+      <form className="csx-tool-form" onSubmit={(e) => { e.preventDefault(); if (url.trim()) onRun(() => analyzeUrl(url.trim())); }}>
+        <div className="csx-form-head"><span>ANALYSIS INPUT</span><strong>Check a suspicious URL</strong></div>
+        <label>Suspicious URL</label>
+        <div className="csx-input-row"><LinkIcon /><input value={url} onChange={(e) => setUrl(e.target.value)} type="url" required placeholder="https://example.com" /></div>
+        <div className="csx-form-actions"><LiquidButton type="submit" disabled={loading}>{loading ? "Analyzing..." : "Analyze URL"}</LiquidButton><span>ML + security heuristics</span></div>
+      </form>
+    );
+  }
 
-  useEffect(() => {
-    document.body.style.overflow = active ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [active]);
+  if (toolId === "file") {
+    return (
+      <form className="csx-tool-form" onSubmit={(e) => { e.preventDefault(); if (file) onRun(() => scanFile(file)); }}>
+        <div className="csx-form-head"><span>STATIC INSPECTION</span><strong>Inspect a suspicious file</strong></div>
+        <FileDrop file={file} setFile={setFile} icon={FileIcon} title="Drop a file here or browse" subtitle="Static analysis only — CyberShield does not execute the file." />
+        <div className="csx-form-actions"><LiquidButton type="submit" disabled={loading || !file}>{loading ? "Scanning..." : "Scan file"}</LiquidButton><span>Local static analysis</span></div>
+      </form>
+    );
+  }
 
-  if (!active || !tool) return null;
-  const Icon = tool.icon;
+  if (toolId === "qr") {
+    return (
+      <form className="csx-tool-form" onSubmit={(e) => { e.preventDefault(); if (qr) onRun(() => scanQr(qr)); }}>
+        <div className="csx-form-head"><span>ENCODED DESTINATION</span><strong>Inspect a QR code</strong></div>
+        <FileDrop file={qr} setFile={setQr} accept="image/*" icon={QrIcon} title="Drop a QR image here" subtitle="CyberShield decodes the destination and analyzes the resolved URL." />
+        <div className="csx-form-actions"><LiquidButton type="submit" disabled={loading || !qr}>{loading ? "Decoding..." : "Analyze QR"}</LiquidButton><span>Image → URL → assessment</span></div>
+      </form>
+    );
+  }
+
+  if (toolId === "email") {
+    return (
+      <form className="csx-tool-form" onSubmit={(e) => { e.preventDefault(); onRun(() => analyzeEmail({ ...email, reply_to_email: email.reply_to_email.trim() || null })); }}>
+        <div className="csx-form-head"><span>PHISHING REVIEW</span><strong>Inspect an email message</strong></div>
+        <div className="csx-form-grid">
+          <label>Sender<input type="email" value={email.sender_email} onChange={(e) => setEmail(v => ({ ...v, sender_email: e.target.value }))} placeholder="security@example.com" /></label>
+          <label>Reply-To<input type="email" value={email.reply_to_email} onChange={(e) => setEmail(v => ({ ...v, reply_to_email: e.target.value }))} placeholder="optional@example.com" /></label>
+        </div>
+        <label>Subject<input value={email.subject} onChange={(e) => setEmail(v => ({ ...v, subject: e.target.value }))} placeholder="Email subject" /></label>
+        <label>Message<textarea rows="7" value={email.body} onChange={(e) => setEmail(v => ({ ...v, body: e.target.value }))} placeholder="Paste the suspicious message here..." /></label>
+        <div className="csx-form-actions"><LiquidButton type="submit" disabled={loading}>{loading ? "Analyzing..." : "Analyze email"}</LiquidButton><span>Sender + content signals</span></div>
+      </form>
+    );
+  }
+
+  if (toolId === "login") {
+    return (
+      <form className="csx-tool-form" onSubmit={(e) => { e.preventDefault(); onRun(() => analyzeLogin(login)); }}>
+        <div className="csx-form-head"><span>ACCESS RISK</span><strong>Evaluate login activity</strong></div>
+        <div className="csx-form-grid">
+          <label>User identifier<input required value={login.user_identifier} onChange={(e) => setLogin(v => ({ ...v, user_identifier: e.target.value }))} placeholder="user001" /></label>
+          <label>IP address<input required value={login.ip_address} onChange={(e) => setLogin(v => ({ ...v, ip_address: e.target.value }))} placeholder="192.168.1.20" /></label>
+          <label>Failed attempts<input type="number" min="0" value={login.failed_attempts} onChange={(e) => setLogin(v => ({ ...v, failed_attempts: Number(e.target.value) }))} /></label>
+          <label>Login hour<input type="number" min="0" max="23" value={login.login_hour} onChange={(e) => setLogin(v => ({ ...v, login_hour: Number(e.target.value) }))} /></label>
+        </div>
+        <div className="csx-switches">
+          <label><input type="checkbox" checked={login.new_device} onChange={(e) => setLogin(v => ({ ...v, new_device: e.target.checked }))} /><span>New or unknown device</span></label>
+          <label><input type="checkbox" checked={login.unusual_location} onChange={(e) => setLogin(v => ({ ...v, unusual_location: e.target.checked }))} /><span>Unusual location</span></label>
+        </div>
+        <div className="csx-form-actions"><LiquidButton type="submit" disabled={loading}>{loading ? "Checking..." : "Analyze login"}</LiquidButton><span>Transparent rule scoring</span></div>
+      </form>
+    );
+  }
+
+  return null;
+}
+
+function IntelligencePanel() {
+  const items = [
+    ["URL engine", "Lexical features, URL structure, redirects and security heuristics.", "cyan"],
+    ["File scanner", "Static metadata, hashes and suspicious indicators. No execution.", "blue"],
+    ["Email signals", "Sender, reply-to, subject and message patterns associated with phishing.", "rose"],
+    ["Login risk", "Failed attempts, device novelty, location and time-based indicators.", "orange"]
+  ];
+  return (
+    <div className="csx-info-workspace">
+      <div className="csx-form-head"><span>THREAT INTELLIGENCE</span><strong>What CyberShield evaluates</strong></div>
+      <p>CyberShield combines multiple security signals to support a decision. It does not treat a single indicator as proof of compromise.</p>
+      <div className="csx-intel-grid">
+        {items.map(([t, d, tone]) => <article key={t} className={`tone-${tone}`}><span /><h4>{t}</h4><p>{d}</p></article>)}
+      </div>
+      <div className="csx-boundary-note"><ShieldIcon /><div><strong>Decision-support boundary</strong><p>Static analysis and risk scoring assist review. They do not replace antivirus, sandboxing, provider reputation systems, or human verification.</p></div></div>
+    </div>
+  );
+}
+
+function AwarenessPanel() {
+  const tips = [
+    ["Phishing", "Verify the sender and destination before entering passwords or payment details."],
+    ["QR codes", "Treat unknown QR codes like unknown links. Preview the destination first."],
+    ["Files", "Do not open unexpected attachments, especially executables or macro-enabled documents."],
+    ["Passwords", "Use unique passwords and multi-factor authentication for important accounts."],
+    ["Login alerts", "Unexpected device or location alerts should be reviewed immediately."],
+    ["Urgency", "Pressure, threats and time-limited rewards are common social-engineering tactics."]
+  ];
+  return (
+    <div className="csx-info-workspace">
+      <div className="csx-form-head"><span>CYBER AWARENESS</span><strong>Practical habits that reduce risk</strong></div>
+      <div className="csx-awareness-grid">
+        {tips.map(([t, d], i) => <article key={t}><span>{String(i + 1).padStart(2, "0")}</span><h4>{t}</h4><p>{d}</p></article>)}
+      </div>
+    </div>
+  );
+}
+
+function Workspace({ tool, onHome }) {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => { setResult(null); setError(""); }, [tool.id]);
 
   async function run(action) {
-    setLoading(true); setError(""); setResult(null);
+    setLoading(true);
+    setError("");
+    setResult(null);
     try {
-      const data = await action();
-      setResult(data);
+      setResult(await action());
     } catch (e) {
       setError(e?.message || "Something went wrong.");
     } finally {
@@ -1246,438 +402,191 @@ function ScannerModal({ active, onClose }) {
     }
   }
 
-
-
-  return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="scanner-modal" onMouseDown={e => e.stopPropagation()}>
-        <div className="scanner-modal-head">
-          <div><span className={`tool-icon tone-${tool.tone}`}><Icon /></span><div><small>CyberShield tool</small><h2>{tool.title}</h2></div></div>
-          <button className="icon-btn" type="button" onClick={onClose}><CloseIcon /></button>
-        </div>
-        <div className="scanner-content">
-          {active === "url" && (
-            <form onSubmit={e => { e.preventDefault(); if (url.trim()) run(() => analyzeUrl(url.trim())); }}>
-              <label>Suspicious URL</label>
-              <div className="scan-input"><LinkIcon /><input value={url} onChange={e => setUrl(e.target.value)} placeholder="https://example.com" type="url" required /></div>
-              <PrimaryButton type="submit" disabled={loading}>{loading ? "Analyzing..." : "Analyze URL"}</PrimaryButton>
-            </form>
-          )}
-          {active === "file" && (
-            <form onSubmit={e => { e.preventDefault(); if (file) run(() => scanFile(file)); }}>
-              <label>Choose a file</label>
-              <div className="file-drop"><FileIcon /><input type="file" onChange={e => setFile(e.target.files?.[0] || null)} required /><strong>{file ? file.name : "Select a file to inspect"}</strong><small>Static analysis only — the file is not executed.</small></div>
-              <PrimaryButton type="submit" disabled={loading || !file}>{loading ? "Scanning..." : "Scan File"}</PrimaryButton>
-            </form>
-          )}
-          {active === "login" && (
-            <form onSubmit={e => { e.preventDefault(); run(() => analyzeLogin(login)); }}>
-              <div className="form-grid">
-                <label>User identifier<input value={login.user_identifier} onChange={e => setLogin(v => ({ ...v, user_identifier: e.target.value }))} placeholder="user001" required /></label>
-                <label>IP address<input value={login.ip_address} onChange={e => setLogin(v => ({ ...v, ip_address: e.target.value }))} placeholder="192.168.1.20" required /></label>
-                <label>Failed attempts<input type="number" min="0" value={login.failed_attempts} onChange={e => setLogin(v => ({ ...v, failed_attempts: Number(e.target.value) }))}/></label>
-                <label>Login hour (0–23)<input type="number" min="0" max="23" value={login.login_hour} onChange={e => setLogin(v => ({ ...v, login_hour: Number(e.target.value) }))}/></label>
-              </div>
-              <label className="toggle-row"><input type="checkbox" checked={login.new_device} onChange={e => setLogin(v => ({ ...v, new_device: e.target.checked }))}/><span>New / unknown device</span></label>
-              <label className="toggle-row"><input type="checkbox" checked={login.unusual_location} onChange={e => setLogin(v => ({ ...v, unusual_location: e.target.checked }))}/><span>Unusual location</span></label>
-              <PrimaryButton type="submit" disabled={loading}>{loading ? "Checking..." : "Analyze Login Risk"}</PrimaryButton>
-            </form>
-          )}
-          {active === "email" && (
-            <form onSubmit={e => { e.preventDefault(); if (email.sender_email.trim() || email.subject.trim() || email.body.trim()) run(() => analyzeEmail({ ...email, reply_to_email: email.reply_to_email.trim() || null })); }}>
-              <div className="form-grid">
-                <label>Sender email<input type="email" value={email.sender_email} onChange={e => setEmail(v => ({ ...v, sender_email: e.target.value }))} placeholder="security@example.com" /></label>
-                <label>Reply-To email (optional)<input type="email" value={email.reply_to_email} onChange={e => setEmail(v => ({ ...v, reply_to_email: e.target.value }))} placeholder="reply@example.com" /></label>
-              </div>
-              <label>Email subject<input value={email.subject} onChange={e => setEmail(v => ({ ...v, subject: e.target.value }))} placeholder="Enter the email subject" /></label>
-              <label>Email message</label>
-              <textarea value={email.body} onChange={e => setEmail(v => ({ ...v, body: e.target.value }))} placeholder="Paste the suspicious email message here..." rows="8" />
-              <PrimaryButton type="submit" disabled={loading}>{loading ? "Analyzing..." : "Analyze Email"}</PrimaryButton>
-            </form>
-          )}
-          {active === "qr" && (
-            <form onSubmit={e => { e.preventDefault(); if (qrFile) run(() => scanQr(qrFile)); }}>
-              <label>QR code image</label>
-              <div className="file-drop"><QrIcon /><input type="file" accept="image/*" onChange={e => setQrFile(e.target.files?.[0] || null)} required /><strong>{qrFile ? qrFile.name : "Select a QR image"}</strong><small>Upload an image containing a QR code. CyberShield will decode and analyze the destination.</small></div>
-              <PrimaryButton type="submit" disabled={loading || !qrFile}>{loading ? "Decoding..." : "Analyze QR Code"}</PrimaryButton>
-            </form>
-          )}
-          {error && <div className="error-box">{error}</div>}
-          <ResultPanel
-            result={result}
-            toolId={active}
-            context={{ url, file, qrFile, email, login }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CyberBrandMark({ className = "" }) {
-  return (
-    <svg className={className} viewBox="0 0 56 56" aria-hidden="true">
-      <defs>
-        <linearGradient id="cs-brand-edge" x1="7" y1="4" x2="49" y2="52" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#45F6FF" />
-          <stop offset=".42" stopColor="#149CFF" />
-          <stop offset=".72" stopColor="#3D5BFF" />
-          <stop offset="1" stopColor="#7B43FF" />
-        </linearGradient>
-        <linearGradient id="cs-brand-bolt" x1="18" y1="17" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F7FFFF" />
-          <stop offset=".45" stopColor="#66E8FF" />
-          <stop offset="1" stopColor="#8A65FF" />
-        </linearGradient>
-      </defs>
-      <path d="M28 3 47 12l4 19-11 17-19 5L6 41 4 21 15 7 28 3Z" fill="#06142D" stroke="url(#cs-brand-edge)" strokeWidth="2.5" />
-      <path d="M38 19.5A14 14 0 1 0 38 36" stroke="url(#cs-brand-edge)" strokeWidth="4" strokeLinecap="round" />
-      <path d="M34.5 16.5 25 27l7 4-10.5 9.5" stroke="url(#cs-brand-bolt)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="42" cy="17" r="2.2" fill="#49F3FF" />
-      <circle cx="43" cy="38" r="2.2" fill="#7C5CFF" />
-      <circle cx="14" cy="42" r="2.2" fill="#1BA7FF" />
-    </svg>
-  );
-}
-
-function CyberCoreHero() {
-  return (
-    <div className="cs-core-wrap" aria-label="CyberShield active defense core">
-      <div className="cs-orbit cs-orbit-a"><i /><i /><i /></div>
-      <div className="cs-orbit cs-orbit-b"><i /><i /></div>
-      <div className="cs-core-aura" />
-      <svg className="cs-core-emblem" viewBox="0 0 244 274" aria-hidden="true">
-        <defs>
-          <linearGradient id="cs-core-edge" x1="24" y1="14" x2="218" y2="255" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#66F8FF" />
-            <stop offset=".35" stopColor="#16A8FF" />
-            <stop offset=".68" stopColor="#345CFF" />
-            <stop offset="1" stopColor="#7840FF" />
-          </linearGradient>
-          <linearGradient id="cs-core-inner" x1="59" y1="61" x2="191" y2="207" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#0AEFFF" />
-            <stop offset=".55" stopColor="#4FA6FF" />
-            <stop offset="1" stopColor="#9C67FF" />
-          </linearGradient>
-        </defs>
-        <path d="M122 7 214 47l15 91-52 88-90 35-71-63 3-99 64-71 39-21Z" fill="#06142D" stroke="url(#cs-core-edge)" strokeWidth="4" />
-        <path d="M122 35 188 64l11 67-38 64-65 25-51-46 2-72 47-51 28-16Z" fill="#072E73" fillOpacity=".58" stroke="url(#cs-core-inner)" strokeWidth="2.5" />
-        <path d="M157 87c-11-15-28-24-47-24-32 0-58 25-58 57s26 57 58 57c18 0 35-8 46-22" stroke="url(#cs-core-inner)" strokeWidth="12" strokeLinecap="round" />
-        <path d="m143 75-41 49 29 15-44 55" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="184" cy="75" r="5" fill="#45F6FF" />
-        <circle cx="194" cy="182" r="5" fill="#7A54FF" />
-        <circle cx="70" cy="220" r="5" fill="#19A7FF" />
-      </svg>
-      <span className="cs-core-node node-a" />
-      <span className="cs-core-node node-b" />
-      <span className="cs-core-node node-c" />
-    </div>
-  );
-}
-
-function useLiquidPointer(stageRef) {
-  const pointer = useRef({
-    tx: 760, ty: 360,
-    x: 760, y: 360,
-    x2: 740, y2: 360,
-    x3: 720, y3: 360,
-    active: 0
-  });
-
-  useEffect(() => {
-    let frame = 0;
-    const tick = () => {
-      const node = stageRef.current;
-      const p = pointer.current;
-      if (node) {
-        p.x += (p.tx - p.x) * 0.16;
-        p.y += (p.ty - p.y) * 0.16;
-        p.x2 += (p.x - p.x2) * 0.09;
-        p.y2 += (p.y - p.y2) * 0.09;
-        p.x3 += (p.x2 - p.x3) * 0.065;
-        p.y3 += (p.y2 - p.y3) * 0.065;
-        node.style.setProperty("--mx", `${p.x}px`);
-        node.style.setProperty("--my", `${p.y}px`);
-        node.style.setProperty("--mx2", `${p.x2}px`);
-        node.style.setProperty("--my2", `${p.y2}px`);
-        node.style.setProperty("--mx3", `${p.x3}px`);
-        node.style.setProperty("--my3", `${p.y3}px`);
-        node.style.setProperty("--pointer-active", String(p.active));
-      }
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [stageRef]);
-
-  return {
-    onPointerMove: event => {
-      const rect = event.currentTarget.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      pointer.current.tx = x;
-      pointer.current.ty = y;
-      pointer.current.active = 1;
-      event.currentTarget.style.setProperty("--tilt-x", String((y / rect.height - 0.5) * -8));
-      event.currentTarget.style.setProperty("--tilt-y", String((x / rect.width - 0.5) * 10));
-    },
-    onPointerLeave: event => {
-      pointer.current.active = 0.32;
-      event.currentTarget.style.setProperty("--tilt-x", "0");
-      event.currentTarget.style.setProperty("--tilt-y", "0");
-    }
-  };
-}
-
-function LocalToolCard({ tool, onOpen }) {
   const Icon = tool.icon;
-  return (
-    <button
-      className={`cs-tool-card cs-tool-${tool.id}`}
-      type="button"
-      onClick={() => onOpen(tool.id)}
-      aria-label={`Open ${tool.title}`}
-    >
-      <span className="cs-tool-glow" />
-      <span className="cs-tool-icon"><Icon /></span>
-      <span className="cs-tool-copy">
-        <strong>{tool.title}</strong>
-        <small>{tool.description}</small>
-      </span>
-      <span className="cs-tool-arrow"><ArrowIcon /></span>
-    </button>
-  );
-}
+  if (tool.id === "threats" || tool.id === "awareness") {
+    return (
+      <section className="csx-workspace-view">
+        <div className="csx-workspace-title">
+          <button className="csx-back" onClick={onHome}>← Command</button>
+          <div><span>{tool.id === "threats" ? "INTELLIGENCE" : "LEARNING"}</span><h1>{tool.title}</h1><p>{tool.description}</p></div>
+        </div>
+        <div className="csx-wide-info">{tool.id === "threats" ? <IntelligencePanel /> : <AwarenessPanel />}</div>
+      </section>
+    );
+  }
 
-function LocalInfoModal({ active, onClose }) {
-  if (!active) return null;
-  const isThreats = active === "threats";
   return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
-      <div className="scanner-modal cs-info-modal" onMouseDown={event => event.stopPropagation()}>
-        <div className="scanner-modal-head">
-          <div>
-            <span className={`tool-icon ${isThreats ? "tone-blue" : "tone-purple"}`}>
-              {isThreats ? <DatabaseIcon /> : <CapIcon />}
-            </span>
-            <div>
-              <small>CyberShield module</small>
-              <h2>{isThreats ? "Threat Intelligence" : "Cyber Awareness"}</h2>
-            </div>
-          </div>
-          <button className="icon-btn" type="button" onClick={onClose}><CloseIcon /></button>
-        </div>
-        <div className="scanner-content cs-info-content">
-          {isThreats ? (
-            <>
-              <p>Use the admin dashboard to inspect stored scan activity, detected threats and security events from the local CyberShield workflow.</p>
-              <PrimaryButton onClick={() => window.location.assign("/admin.html")}><GridIcon /> Open Threat Dashboard</PrimaryButton>
-            </>
-          ) : (
-            <>
-              <p>CyberShield explains why an input was flagged and surfaces safer next actions after each analysis. Use any scanner to see the explainable result panel.</p>
-              <div className="cs-awareness-list">
-                <span><ShieldIcon /> Verify suspicious links before opening them.</span>
-                <span><MailIcon /> Check unexpected email senders and requests.</span>
-                <span><LockIcon /> Treat unusual login activity as a security signal.</span>
-              </div>
-            </>
-          )}
-        </div>
+    <section className="csx-workspace-view">
+      <div className="csx-workspace-title">
+        <button className="csx-back" onClick={onHome}>← Command</button>
+        <div><span>{tool.short.toUpperCase()} / ANALYZER</span><h1>{tool.title}</h1><p>{tool.description}</p></div>
       </div>
-    </div>
-  );
-}
-
-function LocalHeader({ engineOnline, onTool, onAdmin }) {
-  return (
-    <header className="cs-header">
-      <button className="cs-brand" type="button" onClick={() => onTool("url")}>
-        <CyberBrandMark className="cs-brand-mark" />
-        <span className="cs-brand-copy">
-          <strong>CyberShield <em>AI</em></strong>
-          <small>Detect&nbsp;&nbsp;•&nbsp;&nbsp;Prevent&nbsp;&nbsp;•&nbsp;&nbsp;Stay Safe</small>
-        </span>
-      </button>
-
-      <nav className="cs-nav" aria-label="CyberShield tools">
-        <button className="active" type="button"><GridIcon /> Home</button>
-        <button type="button" onClick={() => onTool("url")}><LinkIcon /> URL Scanner</button>
-        <button type="button" onClick={() => onTool("file")}><FileIcon /> File Scanner</button>
-        <button type="button" onClick={() => onTool("login")}><UserIcon /> Login Risk</button>
-        <button type="button" onClick={onAdmin}><DatabaseIcon /> History</button>
-      </nav>
-
-      <div className="cs-header-actions">
-        <span className={`cs-engine ${engineOnline ? "online" : "offline"}`}>
-          <i /> {engineOnline ? "Engine Online" : "Engine Offline"}
-        </span>
-        <button className="cs-profile" type="button" onClick={onAdmin} aria-label="Open admin dashboard"><UserIcon /></button>
+      <div className="csx-workspace-grid">
+        <div className="csx-analyzer-panel">
+          <div className={`csx-tool-badge tone-${tool.tone}`}><Icon /></div>
+          <ToolForm toolId={tool.id} onRun={run} loading={loading} />
+        </div>
+        <ResultPanel result={result} loading={loading} error={error} />
       </div>
-    </header>
-  );
-}
-
-function LocalSystemPanels({ stats, engineOnline, onAdmin }) {
-  const total = Number(stats?.total_scans || 0);
-  const safe = Number(stats?.safe_count || 0);
-  const malicious = Number(stats?.malicious_count || 0);
-  const review = Number(stats?.needs_review || 0);
-  const denominator = Math.max(total, safe + malicious + review, 1);
-  const safePct = Math.round((safe / denominator) * 100);
-  const maliciousPct = Math.round((malicious / denominator) * 100);
-  const reviewPct = Math.max(0, 100 - safePct - maliciousPct);
-
-  const ringStyle = {
-    "--safe": safePct,
-    "--review": reviewPct,
-    "--malicious": maliciousPct
-  };
-
-  return (
-    <section className="cs-panels" aria-label="System overview">
-      <article className="cs-panel cs-overview">
-        <div className="cs-panel-head"><strong><ZapIcon /> System Overview</strong><span>Local Mode</span></div>
-        <div className="cs-stat-grid">
-          <div><span className="blue"><LinkIcon /></span><b>{total}</b><small>URLs Scanned</small></div>
-          <div><span className="green"><ShieldIcon /></span><b>{safe}</b><small>Safe Results</small></div>
-          <div><span className="pink"><ShieldIcon /></span><b>{malicious}</b><small>Threats Detected</small></div>
-          <div><span className="purple"><SearchIcon /></span><b>{review}</b><small>Needs Review</small></div>
-        </div>
-      </article>
-
-      <article className="cs-panel cs-distribution">
-        <div className="cs-panel-head"><strong>Threat Distribution</strong></div>
-        <div className="cs-dist-body">
-          <div className="cs-risk-ring" style={ringStyle}><span><b>{total ? safePct : 0}%</b><small>Safe</small></span></div>
-          <div className="cs-risk-legend">
-            <span><i className="safe" /> Low Risk <b>{total ? safePct : 0}%</b></span>
-            <span><i className="review" /> Review <b>{total ? reviewPct : 0}%</b></span>
-            <span><i className="danger" /> High Risk <b>{total ? maliciousPct : 0}%</b></span>
-          </div>
-        </div>
-      </article>
-
-      <article className="cs-panel cs-status-panel">
-        <div className="cs-panel-head"><strong>System Status</strong><button type="button" onClick={onAdmin}>View History <ArrowIcon /></button></div>
-        <div className="cs-status-list">
-          <div><span className={engineOnline ? "ok" : "bad"}><ZapIcon /></span><p><b>FastAPI Engine</b><small>{engineOnline ? API_BASE_URL : "Start the local backend on port 8000"}</small></p><em>{engineOnline ? "Ready" : "Offline"}</em></div>
-          <div><span className="ok"><ShieldIcon /></span><p><b>ML Threat Model</b><small>URL classification + security rules</small></p><em>Loaded</em></div>
-          <div><span className="info"><DatabaseIcon /></span><p><b>Scan History</b><small>Open Admin for stored security events</small></p><em>Admin</em></div>
-        </div>
-      </article>
     </section>
   );
 }
 
+function MetricCard({ value, label, meta, tone }) {
+  return (
+    <article className={`csx-metric tone-${tone}`}>
+      <span className="csx-metric-dot" />
+      <div><strong>{value}</strong><span>{label}</span></div>
+      <small>{meta}</small>
+    </article>
+  );
+}
+
+function normalizeStats(data) {
+  const overall = data?.overall || data || {};
+  const url = data?.url_scanner || {};
+  const file = data?.file_scanner || {};
+  return {
+    total: overall.total_scans ?? overall.total ?? data?.total_scans ?? "—",
+    urls: url.total ?? data?.url_scans ?? data?.urls ?? "—",
+    files: file.total ?? data?.file_scans ?? data?.files ?? "—",
+    threats: overall.confirmed_threats ?? data?.threats ?? data?.high_risk ?? "—"
+  };
+}
+
+function Home({ stats, apiOnline, onOpenTool }) {
+  const s = normalizeStats(stats);
+  const [quickUrl, setQuickUrl] = useState("");
+  const [quickLoading, setQuickLoading] = useState(false);
+  const [quickResult, setQuickResult] = useState(null);
+  const [quickError, setQuickError] = useState("");
+
+  async function quick(e) {
+    e.preventDefault();
+    if (!quickUrl.trim()) return;
+    setQuickLoading(true);
+    setQuickError("");
+    setQuickResult(null);
+    try { setQuickResult(await analyzeUrl(quickUrl.trim())); }
+    catch (err) { setQuickError(err?.message || "Quick analysis failed."); }
+    finally { setQuickLoading(false); }
+  }
+  const quickAssessment = assessment(quickResult);
+
+  return (
+    <section className="csx-home-view">
+      <div className="csx-home-intro">
+        <span>CYBERSHIELD / COMMAND</span>
+        <h1>Security Command Center</h1>
+        <p>Analyze suspicious activity, review risk signals, and act from one focused workspace.</p>
+      </div>
+
+      <div className="csx-home-top">
+        <div className="csx-metrics-row">
+          <MetricCard value={s.urls} label="URL scans" meta="Threat analysis" tone="cyan" />
+          <MetricCard value={s.files} label="File scans" meta="Static inspection" tone="blue" />
+          <MetricCard value={s.threats} label="High-risk" meta="Needs review" tone="rose" />
+        </div>
+        <form className="csx-quick-card" onSubmit={quick}>
+          <span className="csx-kicker">QUICK ANALYSIS</span>
+          <h2>Check a URL before you trust it.</h2>
+          <div className="csx-quick-input"><SearchIcon /><input type="url" required value={quickUrl} onChange={(e) => setQuickUrl(e.target.value)} placeholder="https://example.com" /></div>
+          <div className="csx-quick-actions"><span>ML + HEURISTICS</span><LiquidButton type="submit" disabled={quickLoading}>{quickLoading ? "Analyzing..." : "Run scan"}</LiquidButton></div>
+          {(quickAssessment || quickError) && (
+            <div className={`csx-quick-result ${quickError ? "error" : riskTone(quickAssessment?.risk, quickAssessment?.score)}`}>
+              <strong>{quickError || quickAssessment?.prediction}</strong>
+              {!quickError && <span>{quickAssessment?.score != null ? `${Math.round(quickAssessment.score)}% risk` : quickAssessment?.risk}</span>}
+            </div>
+          )}
+        </form>
+      </div>
+
+      <div className="csx-home-bottom">
+        <article className="csx-activity-panel">
+          <div className="csx-panel-head"><h3>Threat activity</h3><span>LOCAL SESSION</span></div>
+          <div className="csx-bars">{[24,38,34,56,42,70,64,86,54,72,68,44,62,90,74,96,70,56,72,48,62,54,40,52].map((v,i)=><i key={i} style={{height:`${v}%`}} />)}</div>
+          <p>Visual activity is a session indicator, not proof of compromise.</p>
+          <div className="csx-tool-shortcuts">
+            {tools.slice(0,5).map((tool) => {
+              const Icon = tool.icon;
+              return <button key={tool.id} onClick={() => onOpenTool(tool.id)}><span className={`tone-${tool.tone}`}><Icon /></span><div><strong>{tool.title}</strong><small>{tool.description}</small></div><ArrowIcon /></button>;
+            })}
+          </div>
+        </article>
+
+        <aside className="csx-status-panel">
+          <div className="csx-panel-head"><h3>Protection status</h3><span>{apiOnline ? "ONLINE" : "CHECK API"}</span></div>
+          <div className="csx-system-score"><div><strong>{apiOnline ? "92" : "—"}</strong><small>SYSTEM SCORE</small></div></div>
+          <span className={`csx-engine-pill ${apiOnline ? "online" : ""}`}>{apiOnline ? "ENGINE ONLINE" : "ENGINE UNREACHABLE"}</span>
+          <div className="csx-status-list">
+            <div><span>API endpoint</span><strong>{apiOnline ? "Ready" : "Offline"}</strong></div>
+            <div><span>Local frontend</span><strong>Ready</strong></div>
+            <div><span>Data layer</span><strong>Configured</strong></div>
+          </div>
+          <button className="csx-admin-link" onClick={() => { window.location.href = "/admin.html"; }}>Open admin console <ArrowIcon /></button>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function Header({ apiOnline }) {
+  return (
+    <header className="csx-topbar">
+      <a className="csx-brand" href="/" onClick={(e) => { e.preventDefault(); window.location.href = "/"; }}>
+        <BrandMark />
+        <span><strong>CyberShield</strong><small>SECURITY CONSOLE</small></span>
+      </a>
+      <div className={`csx-engine ${apiOnline ? "online" : ""}`}><i />{apiOnline ? "LOCAL ENGINE" : "ENGINE CHECK"}</div>
+      <button className="csx-user" onClick={() => { window.location.href = "/admin.html"; }}><span>ADMIN</span><i /></button>
+    </header>
+  );
+}
+
+function Rail({ active, onSelect }) {
+  return (
+    <nav className="csx-rail" aria-label="CyberShield tools">
+      <button className={!active ? "active" : ""} onClick={() => onSelect(null)} title="Command Center"><GridIcon /></button>
+      {tools.map((tool) => {
+        const Icon = tool.icon;
+        return <button key={tool.id} className={active === tool.id ? "active" : ""} onClick={() => onSelect(tool.id)} title={tool.title}><Icon /></button>;
+      })}
+    </nav>
+  );
+}
+
 export default function App() {
-  const [activeScanner, setActiveScanner] = useState(null);
-  const [infoModal, setInfoModal] = useState(null);
+  const rootRef = useRef(null);
+  usePointerField(rootRef);
+  const [active, setActive] = useState(null);
   const [stats, setStats] = useState(null);
-  const [engineOnline, setEngineOnline] = useState(false);
-  const stageRef = useRef(null);
-  const liquidPointer = useLiquidPointer(stageRef);
+  const [apiOnline, setApiOnline] = useState(false);
 
   useEffect(() => {
     let mounted = true;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
-
-    fetch(`${API_BASE_URL}/`, { signal: controller.signal })
-      .then(response => {
-        if (mounted) setEngineOnline(response.ok);
-      })
-      .catch(() => {
-        if (mounted) setEngineOnline(false);
-      })
-      .finally(() => clearTimeout(timeout));
-
     getPublicStats()
-      .then(data => { if (mounted) setStats(data); })
-      .catch(() => {});
-
-    return () => {
-      mounted = false;
-      clearTimeout(timeout);
-      controller.abort();
-    };
+      .then((data) => { if (mounted) { setStats(data); setApiOnline(true); } })
+      .catch(() => { if (mounted) setApiOnline(false); });
+    return () => { mounted = false; };
   }, []);
 
-  function openTool(id) {
-    if (id === "threats" || id === "awareness") {
-      setInfoModal(id);
-      return;
-    }
-    setActiveScanner(id);
-  }
-
-  const heroTools = [
-    ["URL Analysis", LinkIcon, "url"],
-    ["File Scanning", FileIcon, "file"],
-    ["Login Risk", UserIcon, "login"],
-    ["Real-time Protection", ZapIcon, "threats"]
-  ];
+  const tool = useMemo(() => tools.find(t => t.id === active), [active]);
 
   return (
-    <>
-      <div
-        className="cs-app"
-        ref={stageRef}
-        onPointerMove={liquidPointer.onPointerMove}
-        onPointerLeave={liquidPointer.onPointerLeave}
-      >
-        <div className="cs-liquid-scene" aria-hidden="true">
-          <span className="cs-wave wave-one" />
-          <span className="cs-wave wave-two" />
-          <span className="cs-pointer-glow glow-one" />
-          <span className="cs-pointer-glow glow-two" />
-          <span className="cs-pointer-glow glow-three" />
-          <span className="cs-ripple ripple-one" />
-          <span className="cs-ripple ripple-two" />
-        </div>
-
-        <LocalHeader
-          engineOnline={engineOnline}
-          onTool={openTool}
-          onAdmin={() => window.location.assign("/admin.html")}
-        />
-
-        <main className="cs-main">
-          <section className="cs-hero">
-            <div className="cs-hero-copy">
-              <div className="cs-kicker"><ShieldIcon /> AI POWERED CYBER SECURITY</div>
-              <h1>Stay One Step <span>Ahead</span></h1>
-              <p>Scan suspicious URLs, analyze files, QR codes and emails, and detect risky login activity using your local CyberShield AI engine.</p>
-              <div className="cs-hero-actions">
-                <button className="cs-primary" type="button" onClick={() => openTool("url")}><SearchIcon /> Start Scanning <ArrowIcon /></button>
-                <button className="cs-secondary" type="button" onClick={() => window.location.assign("/admin.html")}><GridIcon /> View Dashboard</button>
-              </div>
-            </div>
-
-            <div className="cs-hero-visual">
-              <CyberCoreHero />
-              {heroTools.map(([label, Icon, id], index) => (
-                <button className={`cs-feature-node node-${index + 1}`} type="button" onClick={() => openTool(id)} key={label}>
-                  <span><Icon /></span><small>{label}</small>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="cs-tools-grid" aria-label="CyberShield tools">
-            {tools.map(tool => <LocalToolCard key={tool.id} tool={tool} onOpen={openTool} />)}
-          </section>
-
-          <LocalSystemPanels
-            stats={stats}
-            engineOnline={engineOnline}
-            onAdmin={() => window.location.assign("/admin.html")}
-          />
-        </main>
+    <div ref={rootRef} className="csx-app">
+      <div className="csx-pointer-field" aria-hidden="true">
+        <span className="fluid fluid-a" />
+        <span className="fluid fluid-b" />
+        <span className="wake wake-1" />
+        <span className="wake wake-2" />
+        <span className="wake wake-3" />
       </div>
-
-      <ScannerModal active={activeScanner} onClose={() => setActiveScanner(null)} />
-      <LocalInfoModal active={infoModal} onClose={() => setInfoModal(null)} />
-    </>
+      <Header apiOnline={apiOnline} />
+      <Rail active={active} onSelect={setActive} />
+      <main className="csx-main">
+        {tool ? <Workspace tool={tool} onHome={() => setActive(null)} /> : <Home stats={stats} apiOnline={apiOnline} onOpenTool={setActive} />}
+      </main>
+      <footer className="csx-runtime">API {API_BASE_URL}</footer>
+    </div>
   );
 }
