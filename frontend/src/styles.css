@@ -612,3 +612,208 @@ img{display:block}
   .cs-result-top{grid-template-columns:1fr}
   .cs-risk-donut{margin:4px auto 0}
 }
+
+
+/* =========================================================
+   CYBERSHIELD TYPOGRAPHY V2 — modern product hierarchy
+   ========================================================= */
+:root{
+  --font-display:"SF Pro Display","SF Pro Rounded","Inter","Segoe UI",sans-serif;
+  --font-body:"SF Pro Text","Inter","Segoe UI",sans-serif;
+}
+
+body,.cs-page,.cs-tool-modal,.cs-bottom-panel,.cs-tool-card{
+  font-family:var(--font-body);
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+.cs-brand-line strong,
+.cs-hero h1,
+.cs-bottom-head h3,
+.cs-card-copy strong,
+.cs-tool-modal header h2,
+.cs-result-top h3,
+.cs-result-section h4{
+  font-family:var(--font-display);
+}
+
+/* Header / brand */
+.cs-brand-line strong{
+  font-size:29px;
+  font-weight:800;
+  letter-spacing:-.045em;
+}
+.cs-brand-line b{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.03em;
+  background:linear-gradient(90deg,#58ddff,#6c7cff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 24px rgba(64,171,255,.12);
+}
+.cs-brand small{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.01em;
+  color:#8295aa;
+}
+
+/* Hero */
+.cs-ai-pill{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.045em;
+}
+.cs-hero h1{
+  font-size:60px;
+  font-weight:800;
+  letter-spacing:-.055em;
+  line-height:1.02;
+}
+.cs-hero h1 span{
+  background:linear-gradient(90deg,#50d9ff 0%,#5f8bff 45%,#8069ff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 34px rgba(63,126,255,.12);
+}
+.cs-hero-copy>p{
+  font-size:17px;
+  line-height:1.62;
+  letter-spacing:-.012em;
+  color:#a9b9ca;
+}
+
+/* Tool cards */
+.cs-card-copy strong{
+  font-size:17px;
+  font-weight:750;
+  letter-spacing:-.025em;
+}
+.cs-card-copy small{
+  font-size:10px;
+  line-height:1.48;
+  color:#8da1b7;
+}
+
+/* Dashboard typography */
+.cs-bottom-head h3{
+  font-size:18px;
+  font-weight:750;
+  letter-spacing:-.03em;
+}
+.cs-bottom-head>span{
+  font-size:10px;
+  font-weight:600;
+  color:#7f93a9;
+}
+.cs-stat strong{
+  font-family:var(--font-display);
+  font-size:25px;
+  font-weight:780;
+  letter-spacing:-.04em;
+}
+.cs-stat small{
+  font-size:10px;
+  line-height:1.35;
+  color:#8fa2b7;
+}
+.cs-recent-row strong{
+  font-size:11px;
+  font-weight:650;
+}
+.cs-recent-row small{
+  font-size:9px;
+  line-height:1.35;
+}
+
+/* Analyzer modal */
+.cs-tool-modal header small{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-transform:none;
+  color:#54d8ff;
+}
+.cs-tool-modal header h2{
+  font-size:25px;
+  font-weight:780;
+  letter-spacing:-.045em;
+}
+.cs-modal-form>label,.cs-form-grid label{
+  font-size:11px;
+  font-weight:650;
+  color:#91a7bd;
+}
+.cs-modal-form input:not([type="checkbox"]),
+.cs-modal-form textarea,
+.cs-modal-input input{
+  font-size:14px;
+  letter-spacing:-.01em;
+}
+
+/* Result — important hierarchy */
+.cs-result-kicker{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:none;
+  color:#5edfff;
+}
+.cs-result-top h3{
+  margin-top:8px;
+  font-size:22px;
+  line-height:1.15;
+  font-weight:780;
+  letter-spacing:-.04em;
+}
+.cs-result-status{
+  min-width:104px;
+  height:32px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.03em;
+}
+.cs-risk-donut strong{
+  font-family:var(--font-display);
+  font-size:32px;
+  font-weight:800;
+  letter-spacing:-.055em;
+}
+.cs-risk-donut small{
+  font-size:8px;
+  font-weight:650;
+  letter-spacing:.05em;
+  color:#8195aa;
+}
+.cs-result-section h4{
+  font-size:13px;
+  font-weight:750;
+  letter-spacing:-.02em;
+}
+.cs-result-reasons span,
+.cs-result-section p{
+  font-size:11px;
+  line-height:1.62;
+  color:#9eb0c3;
+}
+.cs-result-section.recommendation{
+  padding:13px 14px;
+}
+
+/* subtle light reflection on important text */
+.cs-bottom-head h3,
+.cs-tool-modal header h2,
+.cs-result-top h3{
+  text-shadow:0 1px 0 rgba(255,255,255,.025),0 0 24px rgba(63,141,255,.04);
+}
+
+@media(max-width:700px){
+  .cs-hero h1{font-size:44px}
+  .cs-hero-copy>p{font-size:14px}
+  .cs-brand-line strong{font-size:22px}
+  .cs-card-copy strong{font-size:16px}
+}
