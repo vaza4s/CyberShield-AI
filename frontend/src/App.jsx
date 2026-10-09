@@ -415,7 +415,7 @@ function CompactResult({ result, error, loading }) {
     <section className={`cs-result-card ${tone}`}>
       <div className="cs-result-top">
         <div>
-          <span className="cs-result-kicker">RISK ASSESSMENT</span>
+          <span className="cs-result-kicker">Scan result</span>
           <h3>{a.label}</h3>
           <span className={`cs-result-status ${tone}`}>{a.risk}</span>
         </div>
@@ -439,7 +439,7 @@ function CompactResult({ result, error, loading }) {
       <div className="cs-result-separator" />
 
       <div className="cs-result-section">
-        <h4>Why this was flagged</h4>
+        <h4>Why it was flagged</h4>
         <div className="cs-result-reasons">
           {(a.reasons.length
             ? a.reasons
@@ -455,7 +455,7 @@ function CompactResult({ result, error, loading }) {
       <div className="cs-result-separator" />
 
       <div className="cs-result-section recommendation">
-        <h4>Recommended action</h4>
+        <h4>What to do next</h4>
         <p>{recommendation}</p>
       </div>
     </section>
@@ -598,7 +598,7 @@ function ToolModal({ tool, onClose, onRecord }) {
       <section className={`cs-tool-modal modal-${tool.id}`}>
         <header>
           <span className={`cs-modal-icon tone-${tool.tone}`}><Icon /></span>
-          <div><small>CYBERSHIELD TOOL</small><h2>{tool.title}</h2></div>
+          <div><small>Security tool</small><h2>{tool.title}</h2></div>
           <button className="cs-modal-close" onClick={onClose}><CloseIcon /></button>
         </header>
         <div className="cs-modal-body">
