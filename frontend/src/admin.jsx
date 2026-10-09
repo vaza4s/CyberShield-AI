@@ -1,23 +1,50 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { adminGet, adminLogin, API_BASE_URL } from "./api";
 import { ArrowIcon, DatabaseIcon, FileIcon, LinkIcon, ShieldIcon, UserIcon } from "./icons";
 import "./styles.css";
 import "./admin.css";
-import { ThemeControl, useThemePreference } from "./theme";
 
 const TOKEN_KEY = "cybershield_admin_token";
 
+function BrandMark({ className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <path d="M24 4.5 39.5 10.8v11.8c0 9.5-5.9 17-15.5 21.4C14.4 39.6 8.5 32.1 8.5 22.6V10.8L24 4.5Z" stroke="currentColor" strokeWidth="2" />
+      <path d="M31.8 16.6c-1.9-2.1-4.5-3.2-7.5-3.2-6.2 0-10.7 4.5-10.7 10.6s4.5 10.6 10.7 10.6c3.1 0 5.7-1.1 7.6-3.3" stroke="var(--cs-accent)" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="m30.9 20.1 4.5 3.9-4.5 3.9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function Brand() {
   return (
-    <a className="brand" href="/">
-      <span className="brand-mark"><ShieldIcon /></span>
-      <span className="brand-name">CyberShield <em>AI</em></span>
+    <a className="adv-brand" href="/">
+      <BrandMark />
+      <span><strong>CyberShield</strong><small>SECURITY CONSOLE</small></span>
     </a>
   );
 }
 
-function Login({ onAuthenticated, theme }) {
+function LiquidSubmit({ loading }) {
+  const ref = useRef(null);
+  function move(e) {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r || !ref.current) return;
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    ref.current.style.setProperty("--ax", `${x * 34}px`);
+    ref.current.style.setProperty("--ay", `${y * 20}px`);
+  }
+  return (
+    <button ref={ref} className="adv-liquid" type="submit" disabled={loading} onPointerMove={move} onPointerLeave={() => { if (ref.current) { ref.current.style.setProperty("--ax", "0px"); ref.current.style.setProperty("--ay", "0px"); } }}>
+      <i className="adv-liquid-a" /><i className="adv-liquid-b" /><i className="adv-liquid-shine" />
+      <span>{loading ? "Signing in..." : "Sign in"}</span><ArrowIcon />
+    </button>
+  );
+}
+
+function Login({ onAuthenticated }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,11 +52,12 @@ function Login({ onAuthenticated, theme }) {
 
   async function submit(e) {
     e.preventDefault();
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
       const data = await adminLogin(username, password);
       const token = data?.access_token || data?.token || data?.jwt || data?.accessToken;
-      if (!token) throw new Error("Login succeeded, but no JWT token was returned.");
+      if (!token) throw new Error("Login succeeded, but no access token was returned.");
       sessionStorage.setItem(TOKEN_KEY, token);
       onAuthenticated(token);
     } catch (err) {
@@ -40,39 +68,27 @@ function Login({ onAuthenticated, theme }) {
   }
 
   return (
-    <main className="admin-login-page">
-      <div className="admin-login-theme"><ThemeControl {...theme} /></div>
-      <div className="admin-login-card">
-        <div className="admin-login-brand"><Brand /></div>
-        <span className="admin-badge">Protected admin area</span>
-        <h1>Security operations dashboard</h1>
-        <p>Sign in with the admin credentials configured on the FastAPI backend. The credentials are never stored in this frontend.</p>
+    <main className="adv-login-page">
+      <div className="adv-flow adv-flow-a" />
+      <div className="adv-flow adv-flow-b" />
+      <header className="adv-login-head"><Brand /><span>ADMIN ACCESS</span></header>
+
+      <section className="adv-login-card">
+        <span className="adv-eyebrow-pill">SECURE SESSION</span>
+        <h1>Security operations<br />dashboard</h1>
+        <p>Authenticate to access protected scan statistics, incidents, and recent security activity.</p>
         <form onSubmit={submit}>
-          <label>Username<input value={username} onChange={e => setUsername(e.target.value)} autoComplete="username" required /></label>
-          <label>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required /></label>
-          {error && <div className="error-box">{error}</div>}
-          <button className="btn btn-primary" type="submit" disabled={loading}><span>{loading ? "Signing in..." : "Sign in"}</span><ArrowIcon /></button>
+          <label>Username<input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required placeholder="admin" /></label>
+          <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required placeholder="••••••••••••" /></label>
+          {error && <div className="adv-error">{error}</div>}
+          <LiquidSubmit loading={loading} />
         </form>
-        <small className="admin-api-label">API: {API_BASE_URL}</small>
-      </div>
+        <div className="adv-login-rule" />
+        <div className="adv-api"><i /><span>FastAPI connected • {API_BASE_URL.replace(/^https?:\/\//, "")}</span></div>
+        <small>JWT session • credentials stay in this secure browser session</small>
+      </section>
     </main>
   );
-}
-
-function MetricCard({ title, value, icon: Icon, tone = "gold" }) {
-  return (
-    <article className="admin-metric glass-card">
-      <span className={`admin-metric-icon ${tone}`}><Icon /></span>
-      <div><small>{title}</small><strong>{value ?? "—"}</strong></div>
-    </article>
-  );
-}
-
-function findValue(obj, keys, fallback = "—") {
-  for (const key of keys) {
-    if (obj && obj[key] !== undefined && obj[key] !== null) return obj[key];
-  }
-  return fallback;
 }
 
 function normalizeRecent(data) {
@@ -82,21 +98,43 @@ function normalizeRecent(data) {
     if (Array.isArray(data[key])) return data[key];
   }
   const collected = [];
-  const moduleLabels = { url_scans: "url", file_scans: "file", login_scans: "login", security_events: "security event" };
+  const labels = { url_scans: "URL scan", file_scans: "File scan", login_scans: "Login risk", security_events: "Security event" };
   for (const [key, value] of Object.entries(data)) {
-    if (Array.isArray(value)) value.forEach(item => collected.push({ module: moduleLabels[key] || key, ...item }));
+    if (Array.isArray(value)) value.forEach((item) => collected.push({ module: labels[key] || key, ...item }));
   }
   return collected;
 }
 
-function Dashboard({ token, onLogout, theme }) {
+function pick(obj, keys, fallback = "—") {
+  for (const key of keys) if (obj?.[key] !== undefined && obj?.[key] !== null) return obj[key];
+  return fallback;
+}
+
+function metricData(stats) {
+  return [
+    ["Total scans", stats?.overall?.total_scans ?? pick(stats, ["total_scans", "total", "scans"]), "blue"],
+    ["URL scans", stats?.url_scanner?.total ?? pick(stats, ["url_scans", "urls", "url_count"]), "cyan"],
+    ["File scans", stats?.file_scanner?.total ?? pick(stats, ["file_scans", "files", "file_count"]), "indigo"],
+    ["Threats", stats?.overall?.confirmed_threats ?? pick(stats, ["threats", "high_risk", "malicious", "threat_count"]), "red"]
+  ];
+}
+
+function eventTone(value) {
+  const s = String(value || "").toLowerCase();
+  if (/malicious|high|critical|danger|threat/.test(s)) return "red";
+  if (/medium|review|warn|suspicious/.test(s)) return "orange";
+  return "green";
+}
+
+function Dashboard({ token, onLogout }) {
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   async function load() {
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
     try {
       const [statsData, recentData] = await Promise.all([
         adminGet("/admin/stats", token),
@@ -118,56 +156,55 @@ function Dashboard({ token, onLogout, theme }) {
 
   useEffect(() => { load(); }, []);
 
-  const metrics = useMemo(() => [
-    ["Total scans", stats?.overall?.total_scans ?? findValue(stats, ["total_scans", "total", "scans"]), DatabaseIcon, "blue"],
-    ["URL scans", stats?.url_scanner?.total ?? findValue(stats, ["url_scans", "urls", "url_count"]), LinkIcon, "gold"],
-    ["File scans", stats?.file_scanner?.total ?? findValue(stats, ["file_scans", "files", "file_count"]), FileIcon, "green"],
-    ["Threats / high risk", stats?.overall?.confirmed_threats ?? findValue(stats, ["threats", "high_risk", "malicious", "threat_count"]), ShieldIcon, "rose"],
-  ], [stats]);
+  const metrics = useMemo(() => metricData(stats), [stats]);
 
   return (
-    <div className="admin-shell">
-      <header className="admin-topbar">
+    <div className="adv-admin">
+      <header className="adv-admin-top">
         <Brand />
-        <div className="admin-top-actions">
-          <ThemeControl {...theme} compact />
-          <a href="/" className="admin-home-link">User site</a>
-          <button type="button" onClick={load} disabled={loading}>Refresh</button>
-          <button className="admin-logout" type="button" onClick={() => { sessionStorage.removeItem(TOKEN_KEY); onLogout(); }}>Logout</button>
+        <div className="adv-admin-actions">
+          <span className="adv-online"><i />LOCAL ENGINE</span>
+          <a href="/">User site</a>
+          <button onClick={load} disabled={loading}>Refresh</button>
+          <button className="danger" onClick={() => { sessionStorage.removeItem(TOKEN_KEY); onLogout(); }}>Logout</button>
         </div>
       </header>
 
-      <main className="admin-main">
-        <div className="admin-heading">
-          <div><span className="admin-badge">Live monitoring</span><h1>Admin Dashboard</h1><p>Protected statistics and recent scan activity returned by the FastAPI admin endpoints.</p></div>
-          <div className="admin-system"><span className="status-dot" /> API connected</div>
-        </div>
-
-        {error && <div className="error-box admin-error">{error}</div>}
-
-        <section className="admin-metric-grid">
-          {metrics.map(([title, value, Icon, tone]) => <MetricCard key={title} title={title} value={value} icon={Icon} tone={tone} />)}
+      <main className="adv-admin-main">
+        <section className="adv-admin-heading">
+          <div><span>ADMIN / LIVE MONITORING</span><h1>Security operations dashboard</h1><p>Protected telemetry and recent activity from the CyberShield backend.</p></div>
+          <span className="adv-health"><i />SYSTEM HEALTHY</span>
         </section>
 
-        <section className="admin-content-grid">
-          <article className="admin-panel glass-card">
-            <div className="admin-panel-head"><div><small>Activity feed</small><h2>Recent security events</h2></div><span>{recent.length} items</span></div>
+        {error && <div className="adv-error adv-dashboard-error">{error}</div>}
+
+        <section className="adv-metrics">
+          {metrics.map(([title, value, tone]) => (
+            <article className={`adv-metric ${tone}`} key={title}>
+              <i /><div><strong>{value}</strong><span>{title}</span></div><small>{tone === "red" ? "Review" : "Live"}</small>
+            </article>
+          ))}
+        </section>
+
+        <section className="adv-admin-grid">
+          <article className="adv-feed">
+            <div className="adv-panel-head"><h2>Recent security events</h2><span>{recent.length} ITEMS</span></div>
             {loading ? (
-              <div className="admin-loading">Loading protected data...</div>
+              <div className="adv-empty">Loading protected activity…</div>
             ) : recent.length === 0 ? (
-              <div className="admin-empty">No recent activity returned by the API.</div>
+              <div className="adv-empty">No recent activity returned by the API.</div>
             ) : (
-              <div className="activity-list">
-                {recent.slice(0, 30).map((item, index) => {
-                  const moduleName = item.module || item.type || item.scan_type || item.category || "scan";
+              <div className="adv-feed-list">
+                {recent.slice(0, 12).map((item, i) => {
                   const target = item.url || item.filename || item.file_name || item.email || item.user_identifier || item.username || item.ip_address || item.target || "Security event";
-                  const result = item.risk_level || item.prediction || item.status || item.result || "recorded";
-                  const score = item.risk_score ?? item.score ?? item.confidence;
+                  const module = item.module || item.type || item.scan_type || item.category || "Scan";
+                  const result = item.risk_level || item.prediction || item.status || item.result || "Recorded";
+                  const tone = eventTone(result);
                   return (
-                    <div className="activity-row" key={`${index}-${target}`}>
-                      <span className="activity-icon"><ShieldIcon /></span>
-                      <div className="activity-copy"><strong>{String(target).slice(0, 70)}</strong><small>{String(moduleName).replaceAll("_", " ")}</small></div>
-                      <div className="activity-result"><b>{String(result)}</b>{score !== undefined && <small>{typeof score === "number" ? `${score <= 1 ? Math.round(score*100) : Math.round(score)}%` : score}</small>}</div>
+                    <div className="adv-feed-row" key={`${i}-${target}`}>
+                      <i className={tone} />
+                      <div><strong>{String(target).slice(0, 72)}</strong><small>{String(module).replaceAll("_", " ")}</small></div>
+                      <span className={tone}>{String(result)}</span>
                     </div>
                   );
                 })}
@@ -175,20 +212,22 @@ function Dashboard({ token, onLogout, theme }) {
             )}
           </article>
 
-          <aside className="admin-side">
-            <article className="admin-panel glass-card">
-              <div className="admin-panel-head"><div><small>Backend</small><h2>Security architecture</h2></div></div>
-              <ul className="architecture-list">
-                <li><span><LinkIcon /></span><div><strong>URL engine</strong><small>ML + security heuristics</small></div></li>
-                <li><span><FileIcon /></span><div><strong>File scanner</strong><small>Static analysis only</small></div></li>
-                <li><span><UserIcon /></span><div><strong>Login risk</strong><small>Transparent rule-based scoring</small></div></li>
-                <li><span><ShieldIcon /></span><div><strong>Admin APIs</strong><small>Bearer JWT required</small></div></li>
-              </ul>
+          <aside className="adv-admin-side">
+            <article className="adv-architecture">
+              <h2>Security architecture</h2>
+              {[
+                [LinkIcon, "URL engine", "ML + heuristics", "cyan"],
+                [FileIcon, "File scanner", "Static analysis", "indigo"],
+                [UserIcon, "Login risk", "Rules + signals", "orange"],
+                [DatabaseIcon, "Admin API", "JWT protected", "green"]
+              ].map(([Icon, title, sub, tone]) => (
+                <div className="adv-arch-row" key={title}><span className={tone}><Icon /></span><div><strong>{title}</strong><small>{sub}</small></div></div>
+              ))}
             </article>
-            <article className="admin-panel admin-note glass-card">
-              <small>Project scope</small>
-              <h2>Academic threat-assessment prototype</h2>
-              <p>CyberShield is a decision-support system. The file scanner is static and does not replace antivirus or sandboxing.</p>
+            <article className="adv-scope">
+              <span>PROJECT SCOPE</span>
+              <h2>Decision-support prototype</h2>
+              <p>Static analysis and risk scoring assist review. They do not replace antivirus, sandboxing, or human verification.</p>
             </article>
           </aside>
         </section>
@@ -198,15 +237,12 @@ function Dashboard({ token, onLogout, theme }) {
 }
 
 function AdminApp() {
-  const theme = useThemePreference();
   const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_KEY));
   return token
-    ? <Dashboard token={token} onLogout={() => setToken(null)} theme={theme} />
-    : <Login onAuthenticated={setToken} theme={theme} />;
+    ? <Dashboard token={token} onLogout={() => setToken(null)} />
+    : <Login onAuthenticated={setToken} />;
 }
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <AdminApp />
-  </React.StrictMode>
+  <React.StrictMode><AdminApp /></React.StrictMode>
 );
