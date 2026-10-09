@@ -117,6 +117,9 @@ function usePointerField(ref) {
       root.style.setProperty("--mvx", `${Math.max(-36, Math.min(36, vx))}px`);
       root.style.setProperty("--mvy", `${Math.max(-36, Math.min(36, vy))}px`);
       root.style.setProperty("--mspeed", speed.toFixed(3));
+      root.style.setProperty("--m-scale-x", (1 + speed * 0.82).toFixed(3));
+      root.style.setProperty("--m-scale-y", (1 - speed * 0.22).toFixed(3));
+      root.style.setProperty("--wake-alpha", (speed * 0.62).toFixed(3));
       raf = requestAnimationFrame(tick);
     };
 
